@@ -558,7 +558,7 @@
                 </executions>
             </plugin>
 
-           <!--  <plugin>
+            <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
                 <configuration>
@@ -593,14 +593,11 @@
                         <phase>verify</phase>
                     </execution>
                 </executions>
-            </plugin> -->
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-checkstyle-plugin</artifactId>
-		<configuration>
-			<consoleOutput>true</consoleOutput>
-		</configuration>
+                <artifactId>maven-checkstyle-plugin</artifactId>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.falcon.designer</groupId>
@@ -619,7 +616,7 @@
                             <consoleOutput>true</consoleOutput>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <configLocation>falcon/checkstyle.xml</configLocation>
-                            <failOnViolation>false</failOnViolation>
+                            <failOnViolation>true</failOnViolation>
                             <skip>${skipCheck}</skip>
                         </configuration>
                     </execution>

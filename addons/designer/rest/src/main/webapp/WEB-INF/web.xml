@@ -22,8 +22,7 @@
 
 <web-app>
 
-    <display-name>Apache Falcon Prism</display-name>
-    <description>Apache Falcon Prism</description>
+    <description>Apache Falcon Designer Rest Server</description>
 
    
     <servlet>
