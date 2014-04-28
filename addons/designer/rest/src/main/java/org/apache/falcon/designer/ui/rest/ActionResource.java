@@ -30,7 +30,7 @@ import javax.ws.rs.core.Response;
 import org.codehaus.jettison.json.JSONArray;
 
 /**
- * Jersey Resource for admin operations.
+ * Jersey Resource for action operations.
  */
 @Path("action")
 public class ActionResource {

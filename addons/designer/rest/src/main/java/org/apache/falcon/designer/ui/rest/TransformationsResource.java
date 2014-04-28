@@ -29,7 +29,7 @@ import javax.ws.rs.core.MediaType;
 import org.codehaus.jettison.json.JSONArray;
 
 /**
- * Jersey Resource for admin operations.
+ * Jersey Resource for transformation operations.
  */
 @Path("transformations")
 public class TransformationsResource {
