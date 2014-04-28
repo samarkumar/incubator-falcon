@@ -22,23 +22,12 @@
 
 <web-app>
 
-    <display-name>Apache Falcon Pipeline Designer</display-name>
-    <description>Apache Falcon Pipeline Designer</description>
+    <display-name>Apache Falcon Prism</display-name>
+    <description>Apache Falcon Prism</description>
 
-
-	<!-- Servlets -->
-	<servlet>
-		<servlet-name>backEndServlet</servlet-name>
-		<servlet-class>org.apache.falcon.designer.ui.client.server.impl.BackEndServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>backEndServlet</servlet-name>
-		<url-pattern>/falcondesignerui/backEnd</url-pattern>
-	</servlet-mapping>
-<!-- 
+   
     <servlet>
-        <servlet-name>pipelineApi</servlet-name>
+        <servlet-name>DesignerRestAPI</servlet-name>
         <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>com.sun.jersey.config.property.resourceConfigClass</param-name>
@@ -47,17 +36,15 @@
         <init-param>
             <param-name>com.sun.jersey.config.property.packages</param-name>
             <param-value>
-                org.apache.falcon.designer.resource
+                org.apache.falcon.designer.ui.rest
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>pipelineApi</servlet-name>
+        <servlet-name>DesignerRestAPI</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
- -->
- 
 
 </web-app>
