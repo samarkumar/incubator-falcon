@@ -41,7 +41,8 @@ import org.apache.falcon.expression.ExpressionHelper;
 import org.apache.falcon.group.FeedGroup;
 import org.apache.falcon.group.FeedGroupMap;
 import org.apache.falcon.security.SecurityUtil;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -53,7 +54,7 @@ import java.util.TimeZone;
  */
 public class FeedEntityParser extends EntityParser<Feed> {
 
-    private static final Logger LOG = Logger.getLogger(FeedEntityParser.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FeedEntityParser.class);
 
     public FeedEntityParser() {
         super(EntityType.FEED);
@@ -73,6 +74,7 @@ public class FeedEntityParser extends EntityParser<Feed> {
             validateEntityExists(EntityType.CLUSTER, cluster.getName());
             validateClusterValidity(cluster.getValidity().getStart(), cluster.getValidity().getEnd(),
                     cluster.getName());
+            validateClusterHasRegistry(feed, cluster);
             validateFeedCutOffPeriod(feed, cluster);
         }
 
@@ -177,8 +179,8 @@ public class FeedEntityParser extends EntityParser<Feed> {
                     CrossEntityValidations.validateInstance(process, output, newFeed);
                 }
             }
-            LOG.debug("Verified and found " + process.getName() + " to be valid for new definition of "
-                    + newFeed.getName());
+            LOG.debug("Verified and found {} to be valid for new definition of {}",
+                    process.getName(), newFeed.getName());
         }
     }
 
@@ -335,6 +337,20 @@ public class FeedEntityParser extends EntityParser<Feed> {
             if (feedStorageType != feedClusterStorageType) {
                 throw new ValidationException("The storage type is not uniform for cluster: " + cluster.getName());
             }
+        }
+    }
+
+    private void validateClusterHasRegistry(Feed feed, Cluster cluster) throws FalconException {
+        Storage.TYPE feedClusterStorageType = FeedHelper.getStorageType(feed, cluster);
+
+        if (feedClusterStorageType != Storage.TYPE.TABLE) {
+            return;
+        }
+
+        org.apache.falcon.entity.v0.cluster.Cluster clusterEntity = EntityUtil.getEntity(EntityType.CLUSTER,
+                cluster.getName());
+        if (ClusterHelper.getRegistryEndPoint(clusterEntity) == null) {
+            throw new ValidationException("Cluster should have registry interface defined: " + clusterEntity.getName());
         }
     }
 

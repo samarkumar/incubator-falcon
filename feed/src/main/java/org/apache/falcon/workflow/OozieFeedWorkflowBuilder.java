@@ -52,7 +52,8 @@ import org.apache.falcon.util.RuntimeProperties;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,7 +70,7 @@ import java.util.Properties;
  * Workflow definition builder for feed replication & retention.
  */
 public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
-    private static final Logger LOG = Logger.getLogger(OozieFeedWorkflowBuilder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OozieFeedWorkflowBuilder.class);
 
     public OozieFeedWorkflowBuilder(Feed entity) {
         super(entity);
@@ -82,7 +83,7 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
         for (String clusterName : clusters) {
             org.apache.falcon.entity.v0.feed.Cluster feedCluster = FeedHelper.getCluster(entity, clusterName);
             if (!feedCluster.getValidity().getStart().before(feedCluster.getValidity().getEnd())) {
-                LOG.info("feed validity start <= end for cluster " + clusterName + ". Skipping schedule");
+                LOG.info("feed validity start <= end for cluster {}. Skipping schedule", clusterName);
                 break;
             }
 
@@ -130,8 +131,8 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
         org.apache.falcon.entity.v0.feed.Cluster feedCluster = FeedHelper.getCluster(entity, cluster.getName());
 
         if (feedCluster.getValidity().getEnd().before(new Date())) {
-            LOG.warn("Feed Retention is not applicable as Feed's end time for cluster " + cluster.getName()
-                + " is not in the future");
+            LOG.warn("Feed Retention is not applicable as Feed's end time for cluster {} is not in the future",
+                    cluster.getName());
             return null;
         }
 
@@ -141,17 +142,22 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
     private List<COORDINATORAPP> getReplicationCoordinators(Cluster targetCluster, Path bundlePath)
         throws FalconException {
         List<COORDINATORAPP> replicationCoords = new ArrayList<COORDINATORAPP>();
-
         if (FeedHelper.getCluster(entity, targetCluster.getName()).getType() == ClusterType.TARGET) {
-            String coordName = EntityUtil.getWorkflowName(Tag.REPLICATION, entity).toString();
-            Path basePath = getCoordPath(bundlePath, coordName);
-            replicationMapper.createReplicatonWorkflow(targetCluster, basePath, coordName);
-
             for (org.apache.falcon.entity.v0.feed.Cluster feedCluster : entity.getClusters().getClusters()) {
                 if (feedCluster.getType() == ClusterType.SOURCE) {
-                    COORDINATORAPP coord = replicationMapper.createAndGetCoord(entity,
-                        (Cluster) ConfigurationStore.get().get(EntityType.CLUSTER, feedCluster.getName()),
-                        targetCluster, bundlePath);
+                    String coordName = EntityUtil.getWorkflowName(Tag.REPLICATION, entity).toString();
+                    Path basePath = getCoordPath(bundlePath, coordName);
+                    Cluster srcCluster = ConfigurationStore.get().get(EntityType.CLUSTER, feedCluster.getName());
+
+                    // workflow is serialized to a specific dir
+                    Path sourceSpecificWfPath = new Path(basePath, srcCluster.getName());
+
+                    // Different workflow for each source since hive credentials vary for each cluster
+                    replicationMapper.createReplicationWorkflow(
+                            targetCluster, srcCluster, sourceSpecificWfPath, coordName);
+
+                    COORDINATORAPP coord = replicationMapper.createAndGetCoord(
+                            entity, srcCluster, targetCluster, sourceSpecificWfPath);
 
                     if (coord != null) {
                         replicationCoords.add(coord);
@@ -221,10 +227,10 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
 
             props.put(ARG.operation.getPropName(), EntityOps.DELETE.name());
             props.put(ARG.feedNames.getPropName(), entity.getName());
-            props.put(ARG.feedInstancePaths.getPropName(), "IGNORE");
+            props.put(ARG.feedInstancePaths.getPropName(), IGNORE);
 
             props.put("falconInputFeeds", entity.getName());
-            props.put("falconInPaths", "IGNORE");
+            props.put("falconInPaths", IGNORE);
 
             propagateUserWorkflowProperties(props, "eviction");
 
@@ -239,9 +245,44 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
                 retWfApp.setName(wfName);
                 addLibExtensionsToWorkflow(cluster, retWfApp, EntityType.FEED, "retention");
                 addOozieRetries(retWfApp);
+
+                if (shouldSetupHiveConfiguration(cluster, entity)) {
+                    setupHiveCredentials(cluster, wfPath, retWfApp);
+                }
+
                 marshal(cluster, retWfApp, wfPath);
             } catch(IOException e) {
                 throw new FalconException("Unable to create retention workflow", e);
+            }
+        }
+
+        private void setupHiveCredentials(Cluster cluster, Path wfPath,
+                                          WORKFLOWAPP workflowApp) throws FalconException {
+            if (isSecurityEnabled) {
+                // add hcatalog credentials for secure mode and add a reference to each action
+                addHCatalogCredentials(workflowApp, cluster, HIVE_CREDENTIAL_NAME);
+            }
+
+            // create hive-site.xml file so actions can use it in the classpath
+            createHiveConfiguration(cluster, wfPath, ""); // no prefix since only one hive instance
+
+            for (Object object : workflowApp.getDecisionOrForkOrJoin()) {
+                if (!(object instanceof org.apache.falcon.oozie.workflow.ACTION)) {
+                    continue;
+                }
+
+                org.apache.falcon.oozie.workflow.ACTION action =
+                        (org.apache.falcon.oozie.workflow.ACTION) object;
+                String actionName = action.getName();
+                if ("eviction".equals(actionName)) {
+                    // add reference to hive-site conf to each action
+                    action.getJava().setJobXml("${wf:appPath()}/conf/hive-site.xml");
+
+                    if (isSecurityEnabled) {
+                        // add a reference to credential in the action
+                        action.setCred(HIVE_CREDENTIAL_NAME);
+                    }
+                }
             }
         }
     }
@@ -258,22 +299,79 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
         private static final String TIMEOUT = "timeout";
         private static final String PARALLEL = "parallel";
 
-        private void createReplicatonWorkflow(Cluster cluster, Path wfPath, String wfName)
-            throws FalconException {
+        private static final String SOURCE_HIVE_CREDENTIAL_NAME = "falconSourceHiveAuth";
+        private static final String TARGET_HIVE_CREDENTIAL_NAME = "falconTargetHiveAuth";
+
+        /**
+         * This method is called for each source serializing a workflow for each source per
+         * target. Additionally, hive credentials are recorded in the workflow definition.
+         *
+         * @param targetCluster target cluster
+         * @param sourceCluster source cluster
+         * @param wfPath workflow path
+         * @param wfName workflow name
+         * @throws FalconException
+         */
+        private void createReplicationWorkflow(Cluster targetCluster, Cluster sourceCluster,
+                                               Path wfPath, String wfName) throws FalconException {
+            WORKFLOWAPP repWFapp = getWorkflowTemplate(REPLICATION_WF_TEMPLATE);
+            repWFapp.setName(wfName);
+
             try {
-                WORKFLOWAPP repWFapp = getWorkflowTemplate(REPLICATION_WF_TEMPLATE);
-                repWFapp.setName(wfName);
-                addLibExtensionsToWorkflow(cluster, repWFapp, EntityType.FEED, "replication");
-                addOozieRetries(repWFapp);
-                marshal(cluster, repWFapp, wfPath);
-            } catch(IOException e) {
-                throw new FalconException("Unable to create replication workflow", e);
+                addLibExtensionsToWorkflow(targetCluster, repWFapp, EntityType.FEED, "replication");
+            } catch (IOException e) {
+                throw new FalconException("Unable to add lib extensions to workflow", e);
             }
 
+            addOozieRetries(repWFapp);
+
+            if (shouldSetupHiveConfiguration(targetCluster, entity)) {
+                setupHiveCredentials(targetCluster, sourceCluster, repWFapp);
+            }
+
+            marshal(targetCluster, repWFapp, wfPath);
+        }
+
+        private void setupHiveCredentials(Cluster targetCluster, Cluster sourceCluster,
+                                          WORKFLOWAPP workflowApp) {
+            if (isSecurityEnabled) {
+                // add hcatalog credentials for secure mode and add a reference to each action
+                addHCatalogCredentials(workflowApp, sourceCluster, SOURCE_HIVE_CREDENTIAL_NAME);
+                addHCatalogCredentials(workflowApp, targetCluster, TARGET_HIVE_CREDENTIAL_NAME);
+            }
+
+            // hive-site.xml file is created later in coordinator initialization but
+            // actions are set to point to that here
+
+            for (Object object : workflowApp.getDecisionOrForkOrJoin()) {
+                if (!(object instanceof org.apache.falcon.oozie.workflow.ACTION)) {
+                    continue;
+                }
+
+                org.apache.falcon.oozie.workflow.ACTION action =
+                        (org.apache.falcon.oozie.workflow.ACTION) object;
+                String actionName = action.getName();
+                if ("recordsize".equals(actionName)) {
+                    // add reference to hive-site conf to each action
+                    action.getJava().setJobXml("${wf:appPath()}/conf/falcon-source-hive-site.xml");
+
+                    if (isSecurityEnabled) { // add a reference to credential in the action
+                        action.setCred(SOURCE_HIVE_CREDENTIAL_NAME);
+                    }
+                } else if ("table-export".equals(actionName)) {
+                    if (isSecurityEnabled) { // add a reference to credential in the action
+                        action.setCred(SOURCE_HIVE_CREDENTIAL_NAME);
+                    }
+                } else if ("table-import".equals(actionName)) {
+                    if (isSecurityEnabled) { // add a reference to credential in the action
+                        action.setCred(TARGET_HIVE_CREDENTIAL_NAME);
+                    }
+                }
+            }
         }
 
         private COORDINATORAPP createAndGetCoord(Feed feed, Cluster srcCluster, Cluster trgCluster,
-            Path bundlePath) throws FalconException {
+                                                 Path wfPath) throws FalconException {
             long replicationDelayInMillis = getReplicationDelayInMillis(feed, srcCluster);
             Date sourceStartDate = getStartDate(feed, srcCluster, replicationDelayInMillis);
             Date sourceEndDate = getEndDate(feed, srcCluster);
@@ -283,8 +381,8 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
 
             if (noOverlapExists(sourceStartDate, sourceEndDate,
                 targetStartDate, targetEndDate)) {
-                LOG.warn("Not creating replication coordinator, as the source cluster:" + srcCluster.getName()
-                    + "and target cluster: " + trgCluster.getName() + " do not have overlapping dates");
+                LOG.warn("Not creating replication coordinator, as the source cluster: {} and target cluster: {} do "
+                    + "not have overlapping dates", srcCluster.getName(), trgCluster.getName());
                 return null;
             }
 
@@ -311,7 +409,6 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
             final Storage targetStorage = FeedHelper.createStorage(trgCluster, feed);
             initializeOutputDataSet(feed, trgCluster, replicationCoord, targetStorage);
 
-            Path wfPath = getCoordPath(bundlePath, coordName);
             ACTION replicationWorkflowAction = getReplicationWorkflowAction(
                 srcCluster, trgCluster, wfPath, coordName, sourceStorage, targetStorage);
             replicationCoord.setAction(replicationWorkflowAction);
@@ -436,7 +533,8 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
         }
 
         private ACTION getReplicationWorkflowAction(Cluster srcCluster, Cluster trgCluster, Path wfPath,
-            String wfName, Storage sourceStorage, Storage targetStorage) throws FalconException {
+                                                    String wfName, Storage sourceStorage,
+                                                    Storage targetStorage) throws FalconException {
             ACTION replicationAction = new ACTION();
             WORKFLOW replicationWF = new WORKFLOW();
 
@@ -469,7 +567,7 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
                 propagateTableStorageProperties(trgCluster, targetTableStorage, props, "falconTarget");
                 propagateTableCopyProperties(srcCluster, sourceTableStorage,
                     trgCluster, targetTableStorage, props);
-                setupHiveConfiguration(srcCluster, sourceTableStorage, trgCluster, targetTableStorage, wfPath);
+                setupHiveConfiguration(srcCluster, trgCluster, wfPath);
             }
 
             propagateLateDataProperties(entity, instancePaths, sourceStorage.getType().name(), props);
@@ -527,10 +625,10 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
             props.put(prefix + "Partition", "${coord:dataInPartitionFilter('input', 'hive')}");
         }
 
-        private void setupHiveConfiguration(Cluster srcCluster, CatalogStorage sourceStorage,
-            Cluster trgCluster, CatalogStorage targetStorage, Path wfPath) throws FalconException {
+        private void setupHiveConfiguration(Cluster srcCluster, Cluster trgCluster,
+                                            Path wfPath) throws FalconException {
             Configuration conf = ClusterHelper.getConfiguration(trgCluster);
-            FileSystem fs = HadoopClientFactory.get().createProxiedFileSystem(conf);
+            FileSystem fs = HadoopClientFactory.get().createFileSystem(conf);
 
             try {
                 // copy import export scripts to stagingDir
@@ -540,10 +638,10 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
 
                 // create hive conf to stagingDir
                 Path confPath = new Path(wfPath + "/conf");
-                createHiveConf(fs, confPath, sourceStorage.getCatalogUrl(), srcCluster, "falcon-source-");
-                createHiveConf(fs, confPath, targetStorage.getCatalogUrl(), trgCluster, "falcon-target-");
-            } catch(IOException e) {
-                throw new FalconException(e);
+                persistHiveConfiguration(fs, confPath, srcCluster, "falcon-source-");
+                persistHiveConfiguration(fs, confPath, trgCluster, "falcon-target-");
+            } catch (IOException e) {
+                throw new FalconException("Unable to create hive conf files", e);
             }
         }
 
@@ -565,22 +663,18 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
             Cluster trgCluster, CatalogStorage targetStorage,
             Map<String, String> props) {
             // create staging dirs for export at source & set it as distcpSourcePaths
-            String sourceDatedPartitionKey = sourceStorage.getDatedPartitionKey();
-            String sourceStagingDir =
-                FeedHelper.getStagingDir(srcCluster, entity, sourceStorage, Tag.REPLICATION)
-                    + "/" + sourceDatedPartitionKey
-                    + "=${coord:dataOutPartitionValue('output', '" + sourceDatedPartitionKey + "')}";
-            props.put("distcpSourcePaths", sourceStagingDir + "/" + NOMINAL_TIME_EL + "/data");
+            String sourceStagingPath =
+                FeedHelper.getStagingPath(srcCluster, entity, sourceStorage, Tag.REPLICATION,
+                        NOMINAL_TIME_EL + "/" + trgCluster.getName());
+            props.put("distcpSourcePaths", sourceStagingPath);
 
             // create staging dirs for import at target & set it as distcpTargetPaths
-            String targetDatedPartitionKey = targetStorage.getDatedPartitionKey();
-            String targetStagingDir =
-                FeedHelper.getStagingDir(trgCluster, entity, targetStorage, Tag.REPLICATION)
-                    + "/" + targetDatedPartitionKey
-                    + "=${coord:dataOutPartitionValue('output', '" + targetDatedPartitionKey + "')}";
-            props.put("distcpTargetPaths", targetStagingDir + "/" + NOMINAL_TIME_EL + "/data");
+            String targetStagingPath =
+                FeedHelper.getStagingPath(trgCluster, entity, targetStorage, Tag.REPLICATION,
+                        NOMINAL_TIME_EL + "/" + trgCluster.getName());
+            props.put("distcpTargetPaths", targetStagingPath);
 
-            props.put("sourceRelativePaths", "IGNORE"); // this will bot be used for Table storage.
+            props.put("sourceRelativePaths", IGNORE); // this will bot be used for Table storage.
         }
 
         private void propagateLateDataProperties(Feed feed, String instancePaths,
@@ -624,5 +718,11 @@ public class OozieFeedWorkflowBuilder extends OozieWorkflowBuilder<Feed> {
             version = "0.5";
         }
         props.put("userWorkflowVersion", version);
+    }
+
+    protected boolean shouldSetupHiveConfiguration(Cluster cluster,
+                                                   Feed feed) throws FalconException {
+        Storage.TYPE storageType = FeedHelper.getStorageType(feed, cluster);
+        return Storage.TYPE.TABLE == storageType;
     }
 }

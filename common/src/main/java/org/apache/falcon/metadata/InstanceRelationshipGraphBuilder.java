@@ -32,7 +32,8 @@ import org.apache.falcon.entity.v0.cluster.Cluster;
 import org.apache.falcon.entity.v0.feed.Feed;
 import org.apache.falcon.entity.v0.feed.LocationType;
 import org.apache.falcon.entity.v0.process.Process;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -42,7 +43,7 @@ import java.util.Map;
  */
 public class InstanceRelationshipGraphBuilder extends RelationshipGraphBuilder {
 
-    private static final Logger LOG = Logger.getLogger(InstanceRelationshipGraphBuilder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InstanceRelationshipGraphBuilder.class);
 
     private static final String PROCESS_INSTANCE_FORMAT = "yyyy-MM-dd-HH-mm"; // nominal time
     private static final String FEED_INSTANCE_FORMAT = "yyyyMMddHHmm"; // computed
@@ -67,7 +68,7 @@ public class InstanceRelationshipGraphBuilder extends RelationshipGraphBuilder {
         String entityName = lineageMetadata.get(LineageArgs.ENTITY_NAME.getOptionName());
         String processInstanceName = getProcessInstanceName(entityName,
                 lineageMetadata.get(LineageArgs.NOMINAL_TIME.getOptionName()));
-        LOG.info("Adding process instance: " + processInstanceName);
+        LOG.info("Adding process instance: {}", processInstanceName);
 
         String timestamp = getTimestamp(lineageMetadata);
         Vertex processInstance = addVertex(processInstanceName, RelationshipType.PROCESS_INSTANCE, timestamp);
@@ -111,10 +112,10 @@ public class InstanceRelationshipGraphBuilder extends RelationshipGraphBuilder {
     public void addInstanceToEntity(Vertex instanceVertex, String entityName,
                                     RelationshipType entityType, RelationshipLabel edgeLabel) {
         Vertex entityVertex = findVertex(entityName, entityType);
-        LOG.info("Vertex exists? name=" + entityName + ", type=" + entityType + ", v=" + entityVertex);
+        LOG.info("Vertex exists? name={}, type={}, v={}", entityName, entityType, entityVertex);
         if (entityVertex == null) {
             // todo - throw new IllegalStateException(entityType + " entity vertex must exist " + entityName);
-            LOG.error("Illegal State: " + entityType + " vertex must exist for " + entityName);
+            LOG.error("Illegal State: {} vertex must exist for {}", entityType, entityName);
             return;
         }
 
@@ -132,8 +133,12 @@ public class InstanceRelationshipGraphBuilder extends RelationshipGraphBuilder {
         String[] outputFeedInstancePaths =
                 lineageMetadata.get(LineageArgs.FEED_INSTANCE_PATHS.getOptionName()).split(",");
 
-        addFeedInstances(outputFeedNames, outputFeedInstancePaths,
-                processInstance, RelationshipLabel.PROCESS_FEED_EDGE, lineageMetadata);
+        for (int index = 0; index < outputFeedNames.length; index++) {
+            String feedName = outputFeedNames[index];
+            String feedInstanceDataPath = outputFeedInstancePaths[index];
+            addFeedInstance(processInstance, RelationshipLabel.PROCESS_FEED_EDGE,
+                    lineageMetadata, feedName, feedInstanceDataPath);
+        }
     }
 
     public void addInputFeedInstances(Map<String, String> lineageMetadata,
@@ -145,43 +150,47 @@ public class InstanceRelationshipGraphBuilder extends RelationshipGraphBuilder {
 
         String[] inputFeedNames =
                 lineageMetadata.get(LineageArgs.INPUT_FEED_NAMES.getOptionName()).split("#");
+        // Each input feed is separated by #
         String[] inputFeedInstancePaths =
                 lineageMetadata.get(LineageArgs.INPUT_FEED_PATHS.getOptionName()).split("#");
 
-        addFeedInstances(inputFeedNames, inputFeedInstancePaths,
-                processInstance, RelationshipLabel.FEED_PROCESS_EDGE, lineageMetadata);
+        for (int index = 0; index < inputFeedNames.length; index++) {
+            String inputFeedName = inputFeedNames[index];
+            String inputFeedInstancePath = inputFeedInstancePaths[index];
+            // Multiple instance paths for a given feed is separated by ","
+            String[] feedInstancePaths = inputFeedInstancePath.split(",");
+
+            for (String feedInstanceDataPath : feedInstancePaths) {
+                addFeedInstance(processInstance, RelationshipLabel.FEED_PROCESS_EDGE,
+                        lineageMetadata, inputFeedName, feedInstanceDataPath);
+            }
+        }
     }
 
-    public void addFeedInstances(String[] feedNames, String[] feedInstancePaths,
-                                  Vertex processInstance, RelationshipLabel edgeLabel,
-                                  Map<String, String> lineageMetadata) throws FalconException {
+    private void addFeedInstance(Vertex processInstance, RelationshipLabel edgeLabel,
+                                 Map<String, String> lineageMetadata, String feedName,
+                                 String feedInstanceDataPath) throws FalconException {
         String clusterName = lineageMetadata.get(LineageArgs.CLUSTER.getOptionName());
+        LOG.info("Computing feed instance for : name=" + feedName + ", path= "
+                + feedInstanceDataPath + ", in cluster: " + clusterName);
+        String feedInstanceName = getFeedInstanceName(feedName, clusterName, feedInstanceDataPath);
+        LOG.info("Adding feed instance: " + feedInstanceName);
+        Vertex feedInstance = addVertex(feedInstanceName, RelationshipType.FEED_INSTANCE,
+                getTimestamp(lineageMetadata));
 
-        for (int index = 0; index < feedNames.length; index++) {
-            String feedName = feedNames[index];
-            String feedInstancePath = feedInstancePaths[index];
+        addProcessFeedEdge(processInstance, feedInstance, edgeLabel);
 
-            LOG.info("Computing feed instance for : name=" + feedName + ", path= "
-                    + feedInstancePath + ", in cluster: " + clusterName);
-            String feedInstanceName = getFeedInstanceName(feedName, clusterName, feedInstancePath);
-            LOG.info("Adding feed instance: " + feedInstanceName);
-            Vertex feedInstance = addVertex(feedInstanceName, RelationshipType.FEED_INSTANCE,
-                    getTimestamp(lineageMetadata));
+        addInstanceToEntity(feedInstance, feedName,
+                RelationshipType.FEED_ENTITY, RelationshipLabel.INSTANCE_ENTITY_EDGE);
+        addInstanceToEntity(feedInstance, clusterName,
+                RelationshipType.CLUSTER_ENTITY, RelationshipLabel.FEED_CLUSTER_EDGE);
+        addInstanceToEntity(feedInstance, lineageMetadata.get(LineageArgs.WORKFLOW_USER.getOptionName()),
+                RelationshipType.USER, RelationshipLabel.USER);
 
-            addProcessFeedEdge(processInstance, feedInstance, edgeLabel);
-
-            addInstanceToEntity(feedInstance, feedName,
-                    RelationshipType.FEED_ENTITY, RelationshipLabel.INSTANCE_ENTITY_EDGE);
-            addInstanceToEntity(feedInstance, lineageMetadata.get(LineageArgs.CLUSTER.getOptionName()),
-                    RelationshipType.CLUSTER_ENTITY, RelationshipLabel.FEED_CLUSTER_EDGE);
-            addInstanceToEntity(feedInstance, lineageMetadata.get(LineageArgs.WORKFLOW_USER.getOptionName()),
-                    RelationshipType.USER, RelationshipLabel.USER);
-
-            if (isPreserveHistory()) {
-                Feed feed = ConfigurationStore.get().get(EntityType.FEED, feedName);
-                addDataClassification(feed.getTags(), feedInstance);
-                addGroups(feed.getGroups(), feedInstance);
-            }
+        if (isPreserveHistory()) {
+            Feed feed = ConfigurationStore.get().get(EntityType.FEED, feedName);
+            addDataClassification(feed.getTags(), feedInstance);
+            addGroups(feed.getGroups(), feedInstance);
         }
     }
 
