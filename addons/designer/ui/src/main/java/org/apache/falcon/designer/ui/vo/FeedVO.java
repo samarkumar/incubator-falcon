@@ -21,6 +21,7 @@ package org.apache.falcon.designer.ui.vo;
 import java.io.Serializable;
 import java.util.List;
 
+@SuppressWarnings("serial")
 public class FeedVO implements Serializable {
 
   List<String> clusters;

@@ -23,7 +23,6 @@ import java.util.Map;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import org.apache.falcon.designer.ui.vo.FeedVO;
-import org.apache.hcatalog.common.HCatException;
 
 @RemoteServiceRelativePath("backEnd")
 public interface BackEndService extends RemoteService {

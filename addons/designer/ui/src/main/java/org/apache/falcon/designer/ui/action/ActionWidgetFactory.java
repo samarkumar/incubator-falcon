@@ -16,14 +16,18 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.ui.util;
+package org.apache.falcon.designer.ui.action;
 
+public class ActionWidgetFactory {
 
-public class LogImageWithText extends ImageWithText {
+  public static ActionDialogBox getActionFactor(String actionType) {
 
-  public LogImageWithText(String text) {
-    super(text, "http://freshdata.sk/assets/design/icon_files.png");
-    setSize("50px", "50px");
+    if ("EMAIL".equals(actionType)) {
+      return new ActionDialogBox(new EmailActionWidget());
+    } else {
+      return new ActionDialogBox(new UiBinderDefaultActionWidget(actionType));
+
+    }
+
   }
-
 }

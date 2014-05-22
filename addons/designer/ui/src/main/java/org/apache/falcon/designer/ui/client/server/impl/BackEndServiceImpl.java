@@ -18,8 +18,8 @@
 
 package org.apache.falcon.designer.ui.client.server.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +28,7 @@ import org.apache.falcon.client.FalconCLIException;
 import org.apache.falcon.designer.ui.client.server.BackEndService;
 import org.apache.falcon.designer.ui.hcat.HCatClientFactory;
 import org.apache.falcon.designer.ui.rest.DesignerRestClient;
+import org.apache.falcon.designer.ui.rest.FalconRestClient;
 import org.apache.falcon.designer.ui.rest.RestClient;
 import org.apache.falcon.designer.ui.util.UtilFunctions;
 import org.apache.falcon.designer.ui.vo.FeedVO;
@@ -53,20 +54,20 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
    * 
    */
   private static final long serialVersionUID = 9135387885271735102L;
-  private transient RestClient rClient;
+  private transient FalconRestClient rClient;
   private transient DesignerRestClient desingerRestClient;
 
-  private static final String falconRestURL = "http://databusdev2:15000";
+  private static final String falconRestURL = "https://databusdev2.mkhoj.com:15443/";
   private static final String desginerRestURL =
       "http://localhost:8080/designer-rest";
   // private static final String hcatThriftURL = "http://databusdev2:15000";
 
   {
     try {
-      rClient = new RestClient(falconRestURL);
+      rClient = new FalconRestClient(falconRestURL);
       desingerRestClient = new DesignerRestClient(desginerRestURL);
 
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
@@ -83,7 +84,7 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
       return returnList;
 
     } catch (Exception e) {
-      // e.printStackTrace();
+      e.printStackTrace();
       return null;
     }
   }
@@ -95,7 +96,8 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
       return jsonArrayToList(desingerRestClient.getAllActions());
     } catch (Exception e) {
       e.printStackTrace();
-      return null;
+      return  Arrays.asList("Notify", "Email", "JMS",
+          "HTTP", "Remote", "Shell", "Ship", "DB Export");
     }
 
   }
@@ -106,7 +108,9 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
       return jsonArrayToList(desingerRestClient.getAllTransformations());
     } catch (Exception e) {
       e.printStackTrace();
-      return null;
+      
+      return  Arrays.asList("Project", "Filter",
+          "Aggregate", "Partition", "Join", "Union", "Rollup");
     }
   }
 
@@ -168,7 +172,7 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
             + feedDetails.toShortString());
 
     try {
-      Thread.sleep(10000);
+      Thread.sleep(1000);
     } catch (InterruptedException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

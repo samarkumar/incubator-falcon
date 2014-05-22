@@ -24,32 +24,64 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+
 import org.apache.falcon.client.FalconCLIException;
+import org.apache.hadoop.security.authentication.client.AuthenticatedURL;
+import org.apache.hadoop.security.authentication.client.KerberosAuthenticator;
+import org.apache.hadoop.security.authentication.client.PseudoAuthenticator;
 import org.apache.falcon.entity.v0.cluster.Cluster;
 import org.apache.falcon.entity.v0.feed.Clusters;
 import org.apache.falcon.entity.v0.feed.Feed;
 import org.apache.falcon.resource.EntityList;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import java.net.URL;
+import org.apache.commons.net.util.TrustManagerUtils;
+import java.security.SecureRandom;
 
-public class RestClient {
+public class FalconRestClient {
 
   private final WebResource service;
+  private final AuthenticatedURL.Token authenticationToken;
 
   public static final String WS_HEADER_PREFIX = "header:";
   private static final String REMOTE_USER = "Remote-User";
   private static final String USER = System.getProperty("user.name");
+  public static final String AUTH_URL = "api/options?"
+      + PseudoAuthenticator.USER_NAME + "=" + USER;
 
   /**
-* Create a Falcon client instance.
-*
-* @param falconUrl
-* of the server to which client interacts
-* @throws IOException
-*/
-  public RestClient(String falconUrl) throws IOException {
+   * Name of the HTTP cookie used for the authentication token between the
+   * client and the server.
+   */
+  public static final String AUTH_COOKIE = "hadoop.auth";
+  private static final String AUTH_COOKIE_EQ = AUTH_COOKIE + "=";
+  private static final KerberosAuthenticator AUTHENTICATOR =
+      new KerberosAuthenticator();
+
+  public static final HostnameVerifier ALL_TRUSTING_HOSTNAME_VERIFIER =
+      new HostnameVerifier() {
+        @Override
+        public boolean verify(String hostname, SSLSession sslSession) {
+          return true;
+        }
+      };
+
+  /**
+   * Create a Falcon client instance.
+   * 
+   * @param falconUrl
+   *          of the server to which client interacts
+   * @throws IOException
+   */
+  public FalconRestClient(String falconUrl) throws Exception {
     String baseUrl = notEmpty(falconUrl, "FalconUrl");
     if (!baseUrl.endsWith("/")) {
       baseUrl += "/";
@@ -58,8 +90,36 @@ public class RestClient {
     setFalconTimeOut(client);
     service = client.resource(UriBuilder.fromUri(baseUrl).build());
     client.resource(UriBuilder.fromUri(baseUrl).build());
-
+    authenticationToken = getToken(baseUrl);
     // addHeaders();
+  }
+
+  public static AuthenticatedURL.Token getToken(String baseUrl)
+      throws FalconCLIException {
+    AuthenticatedURL.Token currentToken = new AuthenticatedURL.Token();
+    try {
+      URL url = new URL(baseUrl + AUTH_URL);
+      // using KerberosAuthenticator which falls back to PsuedoAuthenticator
+      // instead of passing authentication type from the command line - bad
+      // factory
+      HttpsURLConnection.setDefaultSSLSocketFactory(getSslContext()
+          .getSocketFactory());
+      HttpsURLConnection
+          .setDefaultHostnameVerifier(ALL_TRUSTING_HOSTNAME_VERIFIER);
+      new AuthenticatedURL(AUTHENTICATOR).openConnection(url, currentToken);
+    } catch (Exception ex) {
+      throw new FalconCLIException(
+          "Could not authenticate, " + ex.getMessage(), ex);
+    }
+
+    return currentToken;
+  }
+
+  private static SSLContext getSslContext() throws Exception {
+    SSLContext sslContext = SSLContext.getInstance("SSL");
+    sslContext.init(null, new TrustManager[] { TrustManagerUtils
+        .getValidateServerCertificateTrustManager() }, new SecureRandom());
+    return sslContext;
   }
 
   private void setFalconTimeOut(Client client) throws IOException {
@@ -72,8 +132,8 @@ public class RestClient {
   }
 
   /**
-* Methods allowed on Entity Resources.
-*/
+   * Methods allowed on Entity Resources.
+   */
   protected static enum Entities {
     VALIDATE("api/entities/validate/", HttpMethod.POST, MediaType.TEXT_XML), STATUS(
         "api/entities/status/", HttpMethod.GET, MediaType.TEXT_XML), DEFINITION(
@@ -157,6 +217,7 @@ public class RestClient {
 
     ClientResponse clientResponse =
         service.path(entities.path).path(entityType).header(REMOTE_USER, USER)
+            .header("Cookie", AUTH_COOKIE_EQ + authenticationToken)
             .accept(entities.mimeType).type(MediaType.TEXT_XML)
             .method(entities.method, ClientResponse.class);
 

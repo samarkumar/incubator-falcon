@@ -16,24 +16,37 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.ui.client.server;
+package org.apache.falcon.designer.ui.widget;
 
 import java.util.List;
-import java.util.Map;
-import org.apache.falcon.designer.ui.vo.FeedVO;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface BackEndServiceAsync {
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
-  void getAllFeedNames(AsyncCallback<List<String>> callback);
+public class FeedInformation extends Composite {
 
-  void getFeedDetails(String feedName, AsyncCallback<FeedVO> callback);
+  public FeedInformation(String heading, List<String> clusters, String footer) {
 
-  void getAllActions(AsyncCallback<List<String>> callback);
+    VerticalPanel panel = new VerticalPanel();
 
-  void getAllTransformations(AsyncCallback<List<String>> callback);
+    Label headingLabel = new Label();
+    headingLabel.setText(heading);
+    panel.add(headingLabel);
 
-  void getColumnsForTable(String hcatUrl, String dbName, String tableName,
-      AsyncCallback<Map<String, String>> callback);
+    for (String clusterHeading : clusters) {
+      CheckBox checkbox = new CheckBox(clusterHeading);
+      checkbox.setValue(true);
+      panel.add(checkbox);
+    }
+
+    Label footerLabel = new Label();
+    footerLabel.setText(heading);
+
+    panel.add(footerLabel);
+
+    initWidget(panel);
+  };
 
 }

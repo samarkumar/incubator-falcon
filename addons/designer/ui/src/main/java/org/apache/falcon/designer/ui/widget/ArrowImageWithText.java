@@ -16,36 +16,16 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.ui.util;
+package org.apache.falcon.designer.ui.widget;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.Image;
 
-public class WaitingWidget {
+public class ArrowImageWithText extends ImageWithText {
 
-  private static final DialogBox d = new DialogBox();
+  public ArrowImageWithText(String text) {
+    super(
+        text,
+        "http://etc-mysitemyway.s3.amazonaws.com/icons/legacy-previews/icons/glossy-black-icons-arrows/007979-glossy-black-icon-arrows-arrow-thick-right.png");
 
-  private static final String loadingURL = GWT.getModuleBaseForStaticFiles()
-      + "images/715.GIF";
-
-  static {
-
-    d.getElement().getStyle().setZIndex(1);
-    d.setGlassEnabled(true);
-    d.setModal(true);
-    d.setAnimationEnabled(true);
-    d.setTitle("Waiting");
-    d.add(new Image(loadingURL));
+    this.setSize("75px", "50px");
   }
-
-  public static void show() {
-    d.center();
-  }
-
-  public static void hide() {
-
-    d.hide();
-  }
-
 }

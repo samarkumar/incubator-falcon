@@ -16,24 +16,14 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.ui.client.server;
+package org.apache.falcon.designer.ui.widget;
 
-import java.util.List;
-import java.util.Map;
-import org.apache.falcon.designer.ui.vo.FeedVO;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface BackEndServiceAsync {
+public class LogImageWithText extends ImageWithText {
 
-  void getAllFeedNames(AsyncCallback<List<String>> callback);
-
-  void getFeedDetails(String feedName, AsyncCallback<FeedVO> callback);
-
-  void getAllActions(AsyncCallback<List<String>> callback);
-
-  void getAllTransformations(AsyncCallback<List<String>> callback);
-
-  void getColumnsForTable(String hcatUrl, String dbName, String tableName,
-      AsyncCallback<Map<String, String>> callback);
+  public LogImageWithText(String text) {
+    super(text, "http://freshdata.sk/assets/design/icon_files.png");
+    setSize("50px", "50px");
+  }
 
 }

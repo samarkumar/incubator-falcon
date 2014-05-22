@@ -35,7 +35,7 @@ import org.codehaus.jettison.json.JSONArray;
 @Path("action")
 public class ActionResource {
 
-  List<String> listOfTransformations = Arrays.asList("Notify", "Email", "JMS",
+  List<String> listOfActions = Arrays.asList("Notify", "Email", "JMS",
       "HTTP", "Remote", "Shell", "Ship", "DB Export");
 
   // TODO very dirty way.. should find a generic way.. too lazy to create a pojo
@@ -43,7 +43,7 @@ public class ActionResource {
   @Path("list")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getAllActions() {
-    JSONArray jsonArray = new JSONArray(listOfTransformations);
+    JSONArray jsonArray = new JSONArray(listOfActions);
     return Response.ok(jsonArray).type(MediaType.APPLICATION_JSON).build();
 
   }

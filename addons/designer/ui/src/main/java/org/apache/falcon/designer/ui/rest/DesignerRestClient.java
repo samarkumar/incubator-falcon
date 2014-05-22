@@ -18,22 +18,16 @@
 
 package org.apache.falcon.designer.ui.rest;
 
-import java.io.IOException;
-
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
-
-import org.apache.falcon.client.FalconCLIException;
 import org.codehaus.jettison.json.JSONArray;
-
 import com.sun.jersey.api.client.ClientResponse;
 
 public class DesignerRestClient extends RestClient {
 
   protected static enum RestCalls {
-    TRANSFORMATIONS_LIST("api/transformations/list", HttpMethod.GET,
-        MediaType.APPLICATION_JSON), ACTION_LIST("api/action/list",
-        HttpMethod.GET, MediaType.APPLICATION_JSON);
+    TRANSFORMATIONS_LIST("api/transformations/list", HttpMethod.GET,MediaType.APPLICATION_JSON), 
+    ACTION_LIST("api/action/list", HttpMethod.GET, MediaType.APPLICATION_JSON);
 
     private String path;
     private String method;
@@ -46,7 +40,7 @@ public class DesignerRestClient extends RestClient {
     }
   }
 
-  public DesignerRestClient(String designerRestUrl) throws IOException {
+  public DesignerRestClient(String designerRestUrl) throws Exception {
     super(designerRestUrl);
   }
 
@@ -62,7 +56,6 @@ public class DesignerRestClient extends RestClient {
     checkIfSuccessfull(clientResponse);
     String responseString = clientResponse.getEntity(String.class);
     return new JSONArray(responseString);
-    
 
   }
 
@@ -70,7 +63,6 @@ public class DesignerRestClient extends RestClient {
 
     RestCalls actionList = RestCalls.ACTION_LIST;
     ClientResponse clientResponse = getService().path(actionList.path)
-
     .method(actionList.method, ClientResponse.class);
 
     checkIfSuccessfull(clientResponse);

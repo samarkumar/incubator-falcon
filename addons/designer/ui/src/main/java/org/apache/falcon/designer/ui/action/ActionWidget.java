@@ -16,24 +16,31 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.ui.client.server;
+package org.apache.falcon.designer.ui.action;
 
-import java.util.List;
-import java.util.Map;
-import org.apache.falcon.designer.ui.vo.FeedVO;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.apache.falcon.designer.ui.vo.ActionVO;
 
-public interface BackEndServiceAsync {
+import com.google.gwt.user.client.ui.Composite;
 
-  void getAllFeedNames(AsyncCallback<List<String>> callback);
+public abstract class ActionWidget<T extends ActionVO> extends Composite {
 
-  void getFeedDetails(String feedName, AsyncCallback<FeedVO> callback);
+  private String type;
 
-  void getAllActions(AsyncCallback<List<String>> callback);
+  public String getType() {
+    return type;
+  }
 
-  void getAllTransformations(AsyncCallback<List<String>> callback);
+  abstract T getCurrentActionVO();
 
-  void getColumnsForTable(String hcatUrl, String dbName, String tableName,
-      AsyncCallback<Map<String, String>> callback);
+  public void setType(String type) {
+    this.type = type;
+  }
 
+  ActionWidget(String type) {
+    if (type == null) {
+      this.type = "DEFAULT";
+    } else {
+      this.type = type;
+    }
+  }
 }

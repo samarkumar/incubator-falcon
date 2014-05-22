@@ -15,25 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.falcon.designer.ui.vo;
 
-package org.apache.falcon.designer.ui.client.server;
+public class ActionVO {
 
-import java.util.List;
-import java.util.Map;
-import org.apache.falcon.designer.ui.vo.FeedVO;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+  private String displayString;
 
-public interface BackEndServiceAsync {
+  public String getDisplayString() {
+    return displayString;
+  }
 
-  void getAllFeedNames(AsyncCallback<List<String>> callback);
-
-  void getFeedDetails(String feedName, AsyncCallback<FeedVO> callback);
-
-  void getAllActions(AsyncCallback<List<String>> callback);
-
-  void getAllTransformations(AsyncCallback<List<String>> callback);
-
-  void getColumnsForTable(String hcatUrl, String dbName, String tableName,
-      AsyncCallback<Map<String, String>> callback);
+  public void setDisplayString(String displayString) {
+    this.displayString = displayString;
+  }
 
 }

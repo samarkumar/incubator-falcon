@@ -15,25 +15,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.falcon.designer.ui.vo;
 
-package org.apache.falcon.designer.ui.client.server;
+public class EmailActionVO extends ActionVO {
 
-import java.util.List;
-import java.util.Map;
-import org.apache.falcon.designer.ui.vo.FeedVO;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+  private String toEmails;
+  private String ccEmails;
+  private String subjects;
+  private String body;
 
-public interface BackEndServiceAsync {
+  public EmailActionVO() {
+    setDisplayString("Email");
+  }
 
-  void getAllFeedNames(AsyncCallback<List<String>> callback);
+  public String getToEmails() {
+    return toEmails;
+  }
 
-  void getFeedDetails(String feedName, AsyncCallback<FeedVO> callback);
+  public void setToEmails(String toEmails) {
+    this.toEmails = toEmails;
+  }
 
-  void getAllActions(AsyncCallback<List<String>> callback);
+  public String getCcEmails() {
+    return ccEmails;
+  }
 
-  void getAllTransformations(AsyncCallback<List<String>> callback);
+  public void setCcEmails(String ccEmails) {
+    this.ccEmails = ccEmails;
+  }
 
-  void getColumnsForTable(String hcatUrl, String dbName, String tableName,
-      AsyncCallback<Map<String, String>> callback);
+  public String getSubjects() {
+    return subjects;
+  }
 
+  public void setSubjects(String subjects) {
+    this.subjects = subjects;
+  }
+
+  public String getBody() {
+    return body;
+  }
+
+  public void setBody(String body) {
+    this.body = body;
+  }
 }

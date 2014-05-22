@@ -15,17 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.falcon.designer.ui.vo;
 
-package org.apache.falcon.designer.ui.util;
+public class DefaultActionVO extends ActionVO {
 
+  private String script;
 
-public class ArrowImageWithText extends ImageWithText {
-
-  public ArrowImageWithText(String text) {
-    super(
-        text,
-        "http://etc-mysitemyway.s3.amazonaws.com/icons/legacy-previews/icons/glossy-black-icons-arrows/007979-glossy-black-icon-arrows-arrow-thick-right.png");
-
-    this.setSize("75px", "50px");
+  public DefaultActionVO() {
+    setDisplayString("Default");
   }
+
+  public String getScript() {
+    return script;
+  }
+
+  public void setScript(String script) {
+    this.script = script;
+  }
+  
+  @Override
+  public String toString() {
+    
+    return "script :" + script;
+  }
+
 }

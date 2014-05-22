@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.ui.util;
+package org.apache.falcon.designer.ui.widget;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

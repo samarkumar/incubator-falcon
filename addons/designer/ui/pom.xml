@@ -36,6 +36,7 @@
 		<gwtVersion>2.6.0</gwtVersion>
 		<falcon.version>0.5-incubating-SNAPSHOT</falcon.version>
 		<hadoop.version>2.2.0</hadoop.version>
+		<designer.version>0.5-incubating-SNAPSHOT</designer.version>
 		<!-- GWT needs at least java 1.6 -->
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
@@ -125,7 +126,18 @@
 		<artifactId>hadoop-mapreduce-client-core</artifactId>
 		<version>${hadoop.version}</version>
 	</dependency>
-
+	<dependency>
+		<groupId>org.apache.hadoop</groupId>
+		<artifactId>hadoop-auth</artifactId>
+		<version>${hadoop.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.falcon.designer</groupId>
+		<artifactId>designer-action</artifactId>
+		<version>${designer.version}</version>
+	</dependency>
+	
+	
     </dependencies>
 
     <build>

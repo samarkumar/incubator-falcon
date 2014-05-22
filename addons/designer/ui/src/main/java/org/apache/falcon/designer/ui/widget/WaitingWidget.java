@@ -16,24 +16,36 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.ui.client.server;
+package org.apache.falcon.designer.ui.widget;
 
-import java.util.List;
-import java.util.Map;
-import org.apache.falcon.designer.ui.vo.FeedVO;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Image;
 
-public interface BackEndServiceAsync {
+public class WaitingWidget {
 
-  void getAllFeedNames(AsyncCallback<List<String>> callback);
+  private static final DialogBox d = new DialogBox();
 
-  void getFeedDetails(String feedName, AsyncCallback<FeedVO> callback);
+  private static final String loadingURL = GWT.getModuleBaseForStaticFiles()
+      + "images/715.GIF";
 
-  void getAllActions(AsyncCallback<List<String>> callback);
+  static {
 
-  void getAllTransformations(AsyncCallback<List<String>> callback);
+    d.getElement().getStyle().setZIndex(1);
+    d.setGlassEnabled(true);
+    d.setModal(true);
+    d.setAnimationEnabled(true);
+    d.setTitle("Waiting");
+    d.add(new Image(loadingURL));
+  }
 
-  void getColumnsForTable(String hcatUrl, String dbName, String tableName,
-      AsyncCallback<Map<String, String>> callback);
+  public static void show() {
+    d.center();
+  }
+
+  public static void hide() {
+
+    d.hide();
+  }
 
 }

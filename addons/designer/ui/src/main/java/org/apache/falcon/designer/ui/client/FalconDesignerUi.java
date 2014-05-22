@@ -22,14 +22,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.falcon.designer.ui.action.ActionDialogBox;
+import org.apache.falcon.designer.ui.action.ActionWidgetFactory;
 import org.apache.falcon.designer.ui.client.server.BackEndService;
 import org.apache.falcon.designer.ui.client.server.BackEndServiceAsync;
-import org.apache.falcon.designer.ui.util.ArrowImageWithText;
-import org.apache.falcon.designer.ui.util.FeedInformation;
-import org.apache.falcon.designer.ui.util.ImageWithText;
-import org.apache.falcon.designer.ui.util.LogImageWithText;
-import org.apache.falcon.designer.ui.util.WaitingWidget;
 import org.apache.falcon.designer.ui.vo.FeedVO;
+import org.apache.falcon.designer.ui.widget.ActionImageWithText;
+import org.apache.falcon.designer.ui.widget.ArrowImageWithText;
+import org.apache.falcon.designer.ui.widget.FeedInformation;
+import org.apache.falcon.designer.ui.widget.ImageWithText;
+import org.apache.falcon.designer.ui.widget.LogImageWithText;
+import org.apache.falcon.designer.ui.widget.WaitingWidget;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -82,7 +85,7 @@ public class FalconDesignerUi implements EntryPoint {
 
   private HTML outputHTML;
   private final HorizontalPanel schemaTab = new HorizontalPanel();
-  private final TabLayoutPanel outputTab =new TabLayoutPanel(2.5, Unit.EM);;
+  private final TabLayoutPanel outputTab = new TabLayoutPanel(2.5, Unit.EM);;
 
   private final String loadingURL = GWT.getModuleBaseForStaticFiles()
       + "images/715.GIF";
@@ -148,12 +151,31 @@ public class FalconDesignerUi implements EntryPoint {
 
         final String data = event.getData("text");
         String type = event.getData("type");
-        System.out.println("passed value" + event.getSource());
+        System.out.println("passed value" + event.getSource() + "get type "
+            + type);
         if (TRANSFORMATIONLABEL.equals(type)) {
           ImageWithText log = new ArrowImageWithText(data + "(" + type + ")");
           workPanel.add(log);
 
-        } else {
+        } else if (ACTIONLABLE.equals(type)) {
+
+          ImageWithText log = null;
+          log = new ActionImageWithText(data);
+
+          log.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent clickEventInst) {
+
+              System.out.println(" ------------ action widget ------------" + data);
+              ActionDialogBox emailAction =ActionWidgetFactory.getActionFactor(data.toUpperCase());
+              emailAction.center();
+
+            }
+          });
+
+          workPanel.add(log);
+        } else if (SCHEMALABLE.equals(type)){
           ImageWithText log = null;
           if (SCHEMALABLE.equals(type)) {
 
@@ -163,7 +185,7 @@ public class FalconDesignerUi implements EntryPoint {
 
               @Override
               public void onClick(ClickEvent clickEventInst) {
-                
+
                 WaitingWidget.show();
                 System.out
                     .println("here ------------ ------------ ------------ ------------ ------------ ------------");
@@ -177,16 +199,17 @@ public class FalconDesignerUi implements EntryPoint {
                         int rowNumber = 0;
                         for (Entry<String, String> eachEntry : result
                             .entrySet()) {
-                          schemaFlexTable.setText(rowNumber, 0, eachEntry.getKey());
-                          schemaFlexTable.setText(rowNumber, 1, eachEntry.getValue());
+                          schemaFlexTable.setText(rowNumber, 0,
+                              eachEntry.getKey());
+                          schemaFlexTable.setText(rowNumber, 1,
+                              eachEntry.getValue());
                           rowNumber++;
                         }
-                        
+
                         schemaTab.clear();
                         schemaTab.add(schemaFlexTable);
                         outputTab.add(schemaTab, "Schema");
-                        
-                        
+
                         WaitingWidget.hide();
 
                       }
@@ -213,8 +236,6 @@ public class FalconDesignerUi implements EntryPoint {
                         backEndService.getColumnsForTable(result.getHcatURL(),
                             result.getDatabaseName(), result.getTableName(),
                             callbackPopulateOutPutTab);
-                        
-                        
 
                       }
 
@@ -238,6 +259,10 @@ public class FalconDesignerUi implements EntryPoint {
           }
           // will show details on clicking on the logs
           workPanel.add(log);
+        }else {
+          ImageWithText log = null;
+          log = new ActionImageWithText(data);
+          workPanel.add(log);
         }
       }
     });
@@ -250,13 +275,12 @@ public class FalconDesignerUi implements EntryPoint {
 
     renderTransformations(rightPanel);
 
-    FlexTable menuflexTable = new FlexTable();
-    int rowIndex = 1;
     renderActions(rightPanel);
-
     // add pipelines
 
-    menuflexTable = new FlexTable();
+    FlexTable menuflexTable = new FlexTable();
+    int rowIndex = 1;
+
     menuflexTable.setWidth("100%");
     menuflexTable.insertRow(HeaderRowIndex);
     addColumn(PIPELINESLABEL, menuflexTable);
@@ -265,9 +289,6 @@ public class FalconDesignerUi implements EntryPoint {
     Tree treeMenu = showPipelinTree();
     menuflexTable.setWidget(rowIndex, 0, treeMenu);
     leftPanel.addNorth(menuflexTable, screenHeight / (double) 2);
-
-
-
 
     renderFeeds(leftPanel);
 
@@ -315,7 +336,7 @@ public class FalconDesignerUi implements EntryPoint {
             System.out.println("Dragging");
             dragstartevent.setData("text", widgetLabel.getText());
             dragstartevent.setData("type", type);
-
+           
           }
         });
       }
@@ -334,8 +355,7 @@ public class FalconDesignerUi implements EntryPoint {
   }
 
   private void renderFeeds(SplitLayoutPanel leftPanel) {
-    
-    
+
     final FlexTable menuflexTable = new FlexTable();
     menuflexTable.setWidth("100%");
     leftPanel.add(menuflexTable);
@@ -385,7 +405,7 @@ public class FalconDesignerUi implements EntryPoint {
           public void onSuccess(List<String> result) {
             int localIndex = rowIndex;
             for (String eachValue : result) {
-              addRow(eachValue, menuflexTable, localIndex++, SCHEMALABLE);
+              addRow(eachValue, menuflexTable, localIndex++, ACTIONLABLE);
 
             }
             actionVerticalPanel.clear();
@@ -426,7 +446,7 @@ public class FalconDesignerUi implements EntryPoint {
           public void onSuccess(List<String> result) {
             int localIndex = rowIndex;
             for (String eachValue : result) {
-              addRow(eachValue, menuflexTable, localIndex++, SCHEMALABLE);
+              addRow(eachValue, menuflexTable, localIndex++, TRANSFORMATIONLABEL);
             }
             transformationVerticalPanel.clear();
             transformationVerticalPanel.add(menuflexTable);

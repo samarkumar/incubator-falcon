@@ -16,37 +16,43 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.ui.util;
+package org.apache.falcon.designer.ui.action;
 
-import java.util.List;
-
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class FeedInformation extends Composite {
+public class ActionDialogBox extends DialogBox {
+  
+  
 
-  public FeedInformation(String heading, List<String> clusters, String footer) {
+  public ActionDialogBox(final @SuppressWarnings("rawtypes") ActionWidget actionWidget) {
 
-    VerticalPanel panel = new VerticalPanel();
+    getElement().getStyle().setZIndex(1);
+    setGlassEnabled(true);
+    setModal(true);
+    setAnimationEnabled(true);
+    setTitle("Waiting");
 
-    Label headingLabel = new Label();
-    headingLabel.setText(heading);
-    panel.add(headingLabel);
+    Label cancel = new Label("Cancel");
 
-    for (String clusterHeading : clusters) {
-      CheckBox checkbox = new CheckBox(clusterHeading);
-      checkbox.setValue(true);
-      panel.add(checkbox);
-    }
+    cancel.addClickHandler(new ClickHandler() {
 
-    Label footerLabel = new Label();
-    footerLabel.setText(heading);
+      @Override
+      public void onClick(ClickEvent event) {
+        System.out.println(actionWidget.getCurrentActionVO().toString());
+        hide();
 
-    panel.add(footerLabel);
+      }
+    });
 
-    initWidget(panel);
-  };
+    VerticalPanel vPanel = new VerticalPanel();
+    vPanel.add(actionWidget);
+    vPanel.add(cancel);
+    add(vPanel);
+
+  }
 
 }
