@@ -29,4 +29,9 @@ public class ActionVO {
     this.displayString = displayString;
   }
 
+  @Override
+  public String toString() {
+    // TODO Auto-generated method stub
+    return "displayString" + getDisplayString();
+  }
 }

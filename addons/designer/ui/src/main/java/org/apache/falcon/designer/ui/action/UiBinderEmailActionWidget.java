@@ -19,6 +19,7 @@
 package org.apache.falcon.designer.ui.action;
 
 import org.apache.falcon.designer.ui.vo.DefaultActionVO;
+import org.apache.falcon.designer.ui.vo.EmailActionVO;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -27,35 +28,41 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class UiBinderDefaultActionWidget extends ActionWidget<DefaultActionVO> {
+public class UiBinderEmailActionWidget extends ActionWidget<EmailActionVO> {
 
   private static LoginUiBinder uiBinder = GWT.create(LoginUiBinder.class);
 
-  @UiTemplate("UiBinderDefaultActionWidget.ui.xml")
-  interface LoginUiBinder extends UiBinder<Widget, UiBinderDefaultActionWidget> {
+  @UiTemplate("UiBinderEmailActionWidget.ui.xml")
+  interface LoginUiBinder extends UiBinder<Widget, UiBinderEmailActionWidget> {
   }
 
   @UiField
-  TextBox scriptTextBox;
+  TextBox toEmailTextBox = new TextBox();
+  TextBox ccEmailTextBox = new TextBox();
+  TextBox subjectTextBox = new TextBox();
+  TextBox bodyTextBox = new TextBox();
 
-  public UiBinderDefaultActionWidget() {
-    super(null);
+  public UiBinderEmailActionWidget() {
+    super("EMAIL");
     initWidget(uiBinder.createAndBindUi(this));
 
   }
 
   @Override
-  public DefaultActionVO getCurrentActionVO() {
-    DefaultActionVO returnVO = new DefaultActionVO();
+  public EmailActionVO getCurrentActionVO() {
+    EmailActionVO returnVO = new EmailActionVO();
+    returnVO.setToEmails(toEmailTextBox.getText());
+    returnVO.setCcEmails(ccEmailTextBox.getText());
+    returnVO.setSubjects(subjectTextBox.getText());
+    returnVO.setBody(bodyTextBox.getText());
 
-    returnVO.setScript(scriptTextBox.getText());
     return returnVO;
   }
-  
+
   @Override
   public void clear() {
-    scriptTextBox.setText("");
-    
+    toEmailTextBox.setText("");
+
   }
 
 }

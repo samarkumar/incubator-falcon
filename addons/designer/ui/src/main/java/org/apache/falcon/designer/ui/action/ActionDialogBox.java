@@ -21,14 +21,17 @@ package org.apache.falcon.designer.ui.action;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class ActionDialogBox extends DialogBox {
-  
-  
 
-  public ActionDialogBox(final @SuppressWarnings("rawtypes") ActionWidget actionWidget) {
+  private ActionWidget actionWidget;
+
+  public ActionDialogBox(
+      final @SuppressWarnings("rawtypes") ActionWidget actionWidget) {
+    this.actionWidget = actionWidget;
 
     getElement().getStyle().setZIndex(1);
     setGlassEnabled(true);
@@ -36,9 +39,10 @@ public class ActionDialogBox extends DialogBox {
     setAnimationEnabled(true);
     setTitle("Waiting");
 
-    Label cancel = new Label("Cancel");
+    Label okButton = new Label("OK");
+    Label clearButton = new Label("Clear");
 
-    cancel.addClickHandler(new ClickHandler() {
+    okButton.addClickHandler(new ClickHandler() {
 
       @Override
       public void onClick(ClickEvent event) {
@@ -47,12 +51,30 @@ public class ActionDialogBox extends DialogBox {
 
       }
     });
+    
+    
+    clearButton.addClickHandler(new ClickHandler() {
 
+      @Override
+      public void onClick(ClickEvent event) {
+        actionWidget.clear();
+       
+
+      }
+    });
+
+    HorizontalPanel buttons = new HorizontalPanel();
+    buttons.add(okButton);
+    buttons.add(clearButton);
     VerticalPanel vPanel = new VerticalPanel();
     vPanel.add(actionWidget);
-    vPanel.add(cancel);
+    vPanel.add(buttons);
     add(vPanel);
 
+  }
+
+  public ActionWidget getActionWidget() {
+    return actionWidget;
   }
 
 }

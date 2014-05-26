@@ -163,12 +163,13 @@ public class FalconDesignerUi implements EntryPoint {
           log = new ActionImageWithText(data);
 
           log.addClickHandler(new ClickHandler() {
+            
+            ActionDialogBox emailAction =ActionWidgetFactory.getActionFactor(data.toUpperCase());
 
             @Override
             public void onClick(ClickEvent clickEventInst) {
 
-              System.out.println(" ------------ action widget ------------" + data);
-              ActionDialogBox emailAction =ActionWidgetFactory.getActionFactor(data.toUpperCase());
+              System.out.println(" ------------ action widget ------------" + emailAction.getActionWidget().getCurrentActionVO());
               emailAction.center();
 
             }

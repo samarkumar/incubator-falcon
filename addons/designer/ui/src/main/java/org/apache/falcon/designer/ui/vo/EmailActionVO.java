@@ -59,4 +59,5 @@ public class EmailActionVO extends ActionVO {
   public void setBody(String body) {
     this.body = body;
   }
+
 }

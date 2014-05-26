@@ -23,9 +23,9 @@ public class ActionWidgetFactory {
   public static ActionDialogBox getActionFactor(String actionType) {
 
     if ("EMAIL".equals(actionType)) {
-      return new ActionDialogBox(new EmailActionWidget());
+      return new ActionDialogBox(new UiBinderEmailActionWidget());
     } else {
-      return new ActionDialogBox(new UiBinderDefaultActionWidget(actionType));
+      return new ActionDialogBox(new UiBinderDefaultActionWidget());
 
     }
 

@@ -610,7 +610,7 @@
                             <consoleOutput>true</consoleOutput>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <configLocation>falcon/checkstyle.xml</configLocation>
-                            <failOnViolation>true</failOnViolation>
+			<failOnViolation>false</failOnViolation>
                             <skip>${skipCheck}</skip>
                         </configuration>
                     </execution>

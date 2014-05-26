@@ -30,7 +30,7 @@ public abstract class ActionWidget<T extends ActionVO> extends Composite {
     return type;
   }
 
-  abstract T getCurrentActionVO();
+  abstract public T getCurrentActionVO();
 
   public void setType(String type) {
     this.type = type;
@@ -43,4 +43,6 @@ public abstract class ActionWidget<T extends ActionVO> extends Composite {
       this.type = type;
     }
   }
+
+  abstract public void clear();
 }
