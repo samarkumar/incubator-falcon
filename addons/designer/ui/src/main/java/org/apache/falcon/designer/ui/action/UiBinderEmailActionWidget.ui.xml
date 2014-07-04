@@ -20,7 +20,6 @@
 					<td>
 						<gwt:TextBox ui:field='toEmailTextBox' />
 					</td>
-
 				</tr>
 				<tr>
 					<td>CC</td>
@@ -35,16 +34,12 @@
 					</td>
 				</tr>
 				<tr>
-
 					<td>BODY</td>
 					<td>
 						<gwt:TextBox ui:field='bodyTextBox' />
 					</td>
 				</tr>
 			</table>
-
-  
-  
 		</div>
 	</gwt:HTMLPanel>
 </ui:UiBinder>

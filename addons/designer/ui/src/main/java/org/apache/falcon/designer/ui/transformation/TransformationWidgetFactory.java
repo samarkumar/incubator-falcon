@@ -16,15 +16,21 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.configuration;
+package org.apache.falcon.designer.ui.transformation;
 
-/**
- * This is the configuration that primitives will use
- * to configure their instance.
- */
-public interface Configuration {
-  
-  public String getName();
+import java.util.Map;
 
-  public String getCategory();
+public class TransformationWidgetFactory {
+
+  public static TransformationDialogBox getTransformationWidget(
+      String actionType, Map<String, String> schema) {
+
+    if ("FILTER".equals(actionType)) {
+      return new TransformationDialogBox(new FilterTransformationWidget(schema));
+    } else {
+      return null;
+
+    }
+
+  }
 }

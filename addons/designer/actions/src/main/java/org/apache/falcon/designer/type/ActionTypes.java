@@ -16,15 +16,20 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.configuration;
+package org.apache.falcon.designer.type;
 
-/**
- * This is the configuration that primitives will use
- * to configure their instance.
- */
-public interface Configuration {
-  
-  public String getName();
+public enum ActionTypes {
+  EMAIL("Email"), JMS("JMS"), HTTP("Http"), SHELL("Shell"), DBEXPORT(
+      "Db Export");
 
-  public String getCategory();
+  private String title;
+
+  ActionTypes(String title) {
+    this.title = title;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
 }

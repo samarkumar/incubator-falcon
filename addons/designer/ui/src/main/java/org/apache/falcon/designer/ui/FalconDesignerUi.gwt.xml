@@ -21,9 +21,13 @@
 	<!-- the theme of your GWT application by uncommenting -->
 	<!-- any one of the following lines. -->
 	<inherits name='com.google.gwt.user.theme.clean.Clean' />
-
+	<inherits name="com.google.gwt.logging.Logging"/>
 	<set-property name="gwt.logging.enabled" value="TRUE" />
-
+	<set-property name="gwt.logging.logLevel" value="INFO"/>
+	<set-property name="gwt.logging.popupHandler" value="DISABLED" /> 
+	<set-property name="gwt.logging.systemHandler" value="ENABLED" />
+	
+	
 	<!-- Other module inherits -->
 	<!-- Specify the app entry point class. -->
 	<entry-point class='org.apache.falcon.designer.ui.client.FalconDesignerUi' />
@@ -36,6 +40,7 @@
 	<source path='vo' />
 	<source path='action' />
 	<source path='widget' />
+	<source path='transformation' />
 
 	<super-source path="super" />
 	<!-- allow Super Dev Mode -->

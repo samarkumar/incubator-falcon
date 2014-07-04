@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.ui.action;
+package org.apache.falcon.designer.ui.transformation;
 
 import java.util.logging.Logger;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -26,14 +26,14 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class ActionDialogBox extends DialogBox {
+public class TransformationDialogBox extends DialogBox {
 
   private final static Logger logger = Logger.getLogger("FalconDesignerUi");
   
-  private ActionWidget actionWidget;
+  private TransformationWidget actionWidget;
 
-  public ActionDialogBox(
-      final @SuppressWarnings("rawtypes") ActionWidget actionWidget) {
+  public TransformationDialogBox(
+      final @SuppressWarnings("rawtypes") TransformationWidget actionWidget) {
     this.actionWidget = actionWidget;
 
     getElement().getStyle().setZIndex(1);
@@ -76,7 +76,7 @@ public class ActionDialogBox extends DialogBox {
 
   }
 
-  public ActionWidget getActionWidget() {
+  public TransformationWidget getActionWidget() {
     return actionWidget;
   }
 

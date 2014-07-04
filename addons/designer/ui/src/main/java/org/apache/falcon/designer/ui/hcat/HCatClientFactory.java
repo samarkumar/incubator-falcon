@@ -39,7 +39,6 @@ public class HCatClientFactory {
       hcatConf.set(HiveConf.ConfVars.SEMANTIC_ANALYZER_HOOK.varname,
           HCatSemanticAnalyzer.class.getName());
       hcatConf.set(HiveConf.ConfVars.HIVE_SUPPORT_CONCURRENCY.varname, "false");
-
       hcatConf.set(HiveConf.ConfVars.PREEXECHOOKS.varname, "");
       hcatConf.set(HiveConf.ConfVars.POSTEXECHOOKS.varname, "");
       

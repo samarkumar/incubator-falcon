@@ -24,5 +24,4 @@
 			<gwt:TextBox ui:field='scriptTextBox'  />
 		</div>
 	</gwt:HTMLPanel>
-
 </ui:UiBinder>

@@ -18,14 +18,20 @@
 
 package org.apache.falcon.designer.ui.client;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.apache.falcon.designer.ui.action.ActionDialogBox;
 import org.apache.falcon.designer.ui.action.ActionWidgetFactory;
 import org.apache.falcon.designer.ui.client.server.BackEndService;
 import org.apache.falcon.designer.ui.client.server.BackEndServiceAsync;
+import org.apache.falcon.designer.ui.transformation.TransformationDialogBox;
+import org.apache.falcon.designer.ui.transformation.TransformationWidgetFactory;
 import org.apache.falcon.designer.ui.vo.FeedVO;
 import org.apache.falcon.designer.ui.widget.ActionImageWithText;
 import org.apache.falcon.designer.ui.widget.ArrowImageWithText;
@@ -36,6 +42,9 @@ import org.apache.falcon.designer.ui.widget.WaitingWidget;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -48,11 +57,11 @@ import com.google.gwt.event.dom.client.DropHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -67,25 +76,30 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class FalconDesignerUi implements EntryPoint {
 
-  BackEndServiceAsync backEndService = (BackEndServiceAsync) GWT
+  private BackEndServiceAsync backEndService = (BackEndServiceAsync) GWT
       .create(BackEndService.class);
 
+  private final static Logger logger = Logger.getLogger("FalconDesignerUi");
+ 
+  
   private Button addStockButton = new Button("Add");
-
   final static String TRANSFORMATIONLABEL = "Transformation";
   final static String SCHEMALABLE = "Schema";
   final static String ACTIONLABLE = "Actions";
   final static String PIPELINESLABEL = "Piplelines";
 
-  String[] pipelinesData = { "Analytics", "Datawarehousing", "Feedback" };
+  private static final String[] pipelinesData =
+      { "Analytics", "Datawarehousing", "Feedback" };
 
+  private static final String hundredPercent = "100%";
   private static final int HeaderRowIndex = 0;
 
-  HorizontalPanel applicableClusterPanel;
+  private HorizontalPanel applicableClusterPanel;
 
   private HTML outputHTML;
   private final HorizontalPanel schemaTab = new HorizontalPanel();
-  private final TabLayoutPanel outputTab = new TabLayoutPanel(2.5, Unit.EM);;
+  private final TabLayoutPanel outputTab = new TabLayoutPanel(2.5, Unit.EM);
+  final AbsolutePanel workPanel = new AbsolutePanel();
 
   private final String loadingURL = GWT.getModuleBaseForStaticFiles()
       + "images/715.GIF";
@@ -109,11 +123,14 @@ public class FalconDesignerUi implements EntryPoint {
     SplitLayoutPanel leftPanel = new SplitLayoutPanel();
     SplitLayoutPanel center = new SplitLayoutPanel();
 
-    final HorizontalPanel workPanel = new HorizontalPanel();
+    Style e = workPanel.getElement().getStyle();
+
+    e.setPosition(Position.ABSOLUTE);
+    e.setOverflow(Overflow.VISIBLE);
 
     HTML contents = new HTML("some data");
     workPanel.add(contents);
-    workPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+    // workPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 
     outputTab.setStyleName("gwt-TabLayoutPanel");
 
@@ -133,8 +150,8 @@ public class FalconDesignerUi implements EntryPoint {
 
       @Override
       public void onDragOver(DragOverEvent dragoverevent) {
-
-        System.out.println("dragged1");
+        logger.log(Level.INFO, "dragged1");
+        
         focusPanel.getElement().getStyle().setBackgroundColor("#99eedf");
 
       }
@@ -145,17 +162,39 @@ public class FalconDesignerUi implements EntryPoint {
       @Override
       public void onDrop(DropEvent event) {
 
-        System.out.println("dragged2");
+        logger.log(Level.INFO, "dragged2");
         // prevent the native text drop
         event.preventDefault();
 
         final String data = event.getData("text");
+        final int workPanelLeft = workPanel.getAbsoluteLeft();
+        final int workPanelTop = workPanel.getAbsoluteTop();
+        final int x = event.getNativeEvent().getClientX();
+        final int y = event.getNativeEvent().getClientY();
+        final int eventX = event.getNativeEvent().getClientX() - workPanelLeft;
+        final int eventY = event.getNativeEvent().getClientY() - workPanelTop;
         String type = event.getData("type");
-        System.out.println("passed value" + event.getSource() + "get type "
+        logger.log(Level.INFO, "passed value" + event.getSource() + "get type "
             + type);
         if (TRANSFORMATIONLABEL.equals(type)) {
           ImageWithText log = new ArrowImageWithText(data + "(" + type + ")");
-          workPanel.add(log);
+          workPanel.add(log, eventX, eventY - 20);
+          
+          //some mock schema . have to find the best to get schema of the last element
+          final Map<String, String> schema = new HashMap<String, String>();
+          schema.put("column1", "int");
+          schema.put("column2", "varchar");
+          
+          log.addClickHandler(new ClickHandler() {
+            
+            TransformationDialogBox emailAction = TransformationWidgetFactory
+                .getTransformationWidget(data.toUpperCase() , schema);
+            
+            @Override
+            public void onClick(ClickEvent event) {
+              emailAction.center();
+            }
+          });
 
         } else if (ACTIONLABLE.equals(type)) {
 
@@ -163,23 +202,24 @@ public class FalconDesignerUi implements EntryPoint {
           log = new ActionImageWithText(data);
 
           log.addClickHandler(new ClickHandler() {
-            
-            ActionDialogBox emailAction =ActionWidgetFactory.getActionFactor(data.toUpperCase());
+
+            ActionDialogBox emailAction = ActionWidgetFactory
+                .getActionFactor(data.toUpperCase());
 
             @Override
             public void onClick(ClickEvent clickEventInst) {
-
-              System.out.println(" ------------ action widget ------------" + emailAction.getActionWidget().getCurrentActionVO());
+              logger.log(Level.INFO, " ------------ action widget ------------" + emailAction.getActionWidget().getCurrentActionVO());
               emailAction.center();
 
             }
           });
 
-          workPanel.add(log);
-        } else if (SCHEMALABLE.equals(type)){
-          ImageWithText log = null;
-          if (SCHEMALABLE.equals(type)) {
+          workPanel.add(log, eventX, eventY);
+          // workPanel.add(log ,100, 50);
+          // log.setVisible(true);
 
+        } else if (SCHEMALABLE.equals(type)) {
+          ImageWithText log = null;
             log = new LogImageWithText(data);
 
             log.addClickHandler(new ClickHandler() {
@@ -188,8 +228,10 @@ public class FalconDesignerUi implements EntryPoint {
               public void onClick(ClickEvent clickEventInst) {
 
                 WaitingWidget.show();
-                System.out
-                    .println("here ------------ ------------ ------------ ------------ ------------ ------------");
+                logger
+                    .log(
+                        Level.INFO,
+                        "here ------------ ------------ ------------ ------------ ------------ ------------");
 
                 final AsyncCallback<Map<String, String>> callbackPopulateOutPutTab =
                     new AsyncCallback<Map<String, String>>() {
@@ -231,7 +273,6 @@ public class FalconDesignerUi implements EntryPoint {
                                 .getClusters(), "Frequency:");
                         applicableClusterPanel.clear();
                         applicableClusterPanel.add(feedInformationPanel);
-
                         outputHTML.setText(result.toString());
 
                         backEndService.getColumnsForTable(result.getHcatURL(),
@@ -253,17 +294,13 @@ public class FalconDesignerUi implements EntryPoint {
               }
             });
 
-          } else {
-
-            log = new LogImageWithText(data);
-
-          }
+         
           // will show details on clicking on the logs
           workPanel.add(log);
-        }else {
+        } else {
           ImageWithText log = null;
           log = new ActionImageWithText(data);
-          workPanel.add(log);
+          workPanel.add(log, x - workPanelLeft, y - workPanelTop);
         }
       }
     });
@@ -282,7 +319,7 @@ public class FalconDesignerUi implements EntryPoint {
     FlexTable menuflexTable = new FlexTable();
     int rowIndex = 1;
 
-    menuflexTable.setWidth("100%");
+    menuflexTable.setWidth(hundredPercent);
     menuflexTable.insertRow(HeaderRowIndex);
     addColumn(PIPELINESLABEL, menuflexTable);
     menuflexTable.addStyleName("FlexTable");
@@ -298,7 +335,7 @@ public class FalconDesignerUi implements EntryPoint {
 
     addStockButton.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
-        System.out.println(" get event source " + event.getSource()
+        logger.log(Level.INFO, " get event source " + event.getSource()
             + " data is ");
         // addStock();
       }
@@ -311,7 +348,7 @@ public class FalconDesignerUi implements EntryPoint {
     Widget widget = createCellWidget(columnHeading, false, null);
     int cell = flexTable.getCellCount(HeaderRowIndex);
 
-    widget.setWidth("100%");
+    widget.setWidth(hundredPercent);
     widget.addStyleName("FlexTable-ColumnLabel");
 
     flexTable.setWidget(HeaderRowIndex, cell, widget);
@@ -334,10 +371,10 @@ public class FalconDesignerUi implements EntryPoint {
 
           @Override
           public void onDragStart(DragStartEvent dragstartevent) {
-            System.out.println("Dragging");
+            logger.log(Level.INFO, "Dragging");
             dragstartevent.setData("text", widgetLabel.getText());
             dragstartevent.setData("type", type);
-           
+
           }
         });
       }
@@ -358,14 +395,14 @@ public class FalconDesignerUi implements EntryPoint {
   private void renderFeeds(SplitLayoutPanel leftPanel) {
 
     final FlexTable menuflexTable = new FlexTable();
-    menuflexTable.setWidth("100%");
+    menuflexTable.setWidth(hundredPercent);
     leftPanel.add(menuflexTable);
     menuflexTable.insertRow(HeaderRowIndex);
     addColumn(SCHEMALABLE, menuflexTable);
     menuflexTable.addStyleName("FlexTable");
     final int rowIndex = 1;
 
-    AsyncCallback<List<String>> callbackAAP =
+    AsyncCallback<List<String>> callBackFeedNames =
         new AsyncCallback<List<String>>() {
           public void onSuccess(List<String> result) {
             int localIndex = rowIndex;
@@ -382,20 +419,20 @@ public class FalconDesignerUi implements EntryPoint {
           }
         };
 
-    backEndService.getAllFeedNames(callbackAAP);
+    backEndService.getAllFeedNames(callBackFeedNames);
 
   }
 
   private void renderActions(final SplitLayoutPanel p) {
 
     final VerticalPanel actionVerticalPanel = new VerticalPanel();
-    actionVerticalPanel.setWidth("100%");
+    actionVerticalPanel.setWidth(hundredPercent);
     p.add(actionVerticalPanel);
     actionVerticalPanel.add(new Image(loadingURL));
 
     final FlexTable menuflexTable = new FlexTable();
     final int rowIndex = 1;
-    menuflexTable.setWidth("100%");
+    menuflexTable.setWidth(hundredPercent);
 
     menuflexTable.insertRow(HeaderRowIndex);
     addColumn(ACTIONLABLE, menuflexTable);
@@ -426,12 +463,12 @@ public class FalconDesignerUi implements EntryPoint {
   private void renderTransformations(final SplitLayoutPanel p) {
 
     final VerticalPanel transformationVerticalPanel = new VerticalPanel();
-    transformationVerticalPanel.setWidth("100%");
+    transformationVerticalPanel.setWidth(hundredPercent);
     p.addNorth(transformationVerticalPanel, screenHeight / (double) 2);
     transformationVerticalPanel.add(new Image(loadingURL));
 
     final FlexTable menuflexTable = new FlexTable();
-    menuflexTable.setWidth("100%");
+    menuflexTable.setWidth(hundredPercent);
     // rightPanel.
     menuflexTable.insertRow(HeaderRowIndex);
     addColumn(TRANSFORMATIONLABEL, menuflexTable);
@@ -447,7 +484,8 @@ public class FalconDesignerUi implements EntryPoint {
           public void onSuccess(List<String> result) {
             int localIndex = rowIndex;
             for (String eachValue : result) {
-              addRow(eachValue, menuflexTable, localIndex++, TRANSFORMATIONLABEL);
+              addRow(eachValue, menuflexTable, localIndex++,
+                  TRANSFORMATIONLABEL);
             }
             transformationVerticalPanel.clear();
             transformationVerticalPanel.add(menuflexTable);
@@ -488,6 +526,7 @@ public class FalconDesignerUi implements EntryPoint {
 
     Command cmd = new Command() {
       public void execute() {
+        getWidgetTree();
         Window.alert("You selected a menu item!");
       }
     };
@@ -498,10 +537,19 @@ public class FalconDesignerUi implements EntryPoint {
     topLevelMenu.addItem("Compile", cmd);
     topLevelMenu.addItem("Version", cmd);
     topLevelMenu.addItem("Provision", cmd);
-
     topLevelMenu.setStyleName("gwt-MenuBar");
-
     return topLevelMenu;
+
+  }
+
+  private void getWidgetTree() {
+
+    Iterator<Widget> allWidgets = workPanel.iterator();
+    while (allWidgets.hasNext()) {
+      Widget currentWidget = allWidgets.next();
+      logger.log(Level.INFO," Widget " + currentWidget.getClass()  + "left" + workPanel.getWidgetLeft(currentWidget) );
+
+    }
 
   }
 

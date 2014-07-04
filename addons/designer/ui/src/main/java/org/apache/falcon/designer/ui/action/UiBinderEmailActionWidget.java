@@ -18,9 +18,7 @@
 
 package org.apache.falcon.designer.ui.action;
 
-import org.apache.falcon.designer.ui.vo.DefaultActionVO;
 import org.apache.falcon.designer.ui.vo.EmailActionVO;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;

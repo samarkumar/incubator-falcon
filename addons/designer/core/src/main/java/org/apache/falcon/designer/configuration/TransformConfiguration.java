@@ -15,16 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.falcon.designer.configuration;
 
-/**
- * This is the configuration that primitives will use
- * to configure their instance.
- */
-public interface Configuration {
-  
-  public String getName();
 
-  public String getCategory();
+public abstract class TransformConfiguration implements Configuration {
+
+ 
+private static final  String category = "TRANSFORM";
+  @Override
+  public String getCategory() {
+    // TODO Auto-generated method stub
+    return category;
+  }
+
+  
+
 }

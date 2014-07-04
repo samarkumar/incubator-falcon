@@ -16,15 +16,31 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.configuration;
+package org.apache.falcon.designer.ui.transformation;
 
-/**
- * This is the configuration that primitives will use
- * to configure their instance.
- */
-public interface Configuration {
-  
-  public String getName();
+import com.google.gwt.user.client.ui.Composite;
 
-  public String getCategory();
+public abstract class TransformationWidget extends Composite {
+
+  private String type;
+
+  public String getType() {
+    return type;
+  }
+
+  abstract public String getCurrentActionVO();
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  TransformationWidget(String type) {
+    if (type == null) {
+      this.type = "DEFAULT";
+    } else {
+      this.type = type;
+    }
+  }
+
+  abstract public void clear();
 }

@@ -19,12 +19,10 @@
 package org.apache.falcon.designer.ui.rest;
 
 import java.io.IOException;
-
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-
 import org.apache.falcon.client.FalconCLIException;
 import org.apache.hadoop.security.authentication.client.AuthenticatedURL;
 import org.apache.hadoop.security.authentication.client.KerberosAuthenticator;

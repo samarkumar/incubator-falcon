@@ -18,7 +18,13 @@
 
 package org.apache.falcon.designer.primitive;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import org.apache.falcon.designer.configuration.Configuration;
+import org.apache.falcon.designer.storage.Storage;
+import org.apache.falcon.designer.storage.StorageException;
 import org.apache.falcon.designer.storage.Storeable;
 
 import javax.annotation.Nonnull;
@@ -29,18 +35,19 @@ import javax.annotation.Nullable;
  * These primitives only have life during the pipeline design time.
  *
  */
-public abstract class Primitive<T extends Primitive> implements Storeable {
+public abstract class Primitive<T extends Primitive , V extends Configuration> implements Storeable {
 
-    protected Configuration configuration;
+    protected V configuration;
+   
 
-    public void setConfiguration(@Nonnull Configuration config) {
+    public void setConfiguration(@Nonnull V config) {
         configuration = config;
     }
 
     protected abstract T copy();
 
     @Nonnull
-    public Configuration getConfiguration() {
+    public V getConfiguration() {
         return configuration;
     }
 
@@ -111,4 +118,41 @@ public abstract class Primitive<T extends Primitive> implements Storeable {
     }
 
     protected abstract T doOptimize();
+    
+    public abstract String getNamespace() ;
+
+    public abstract String getEntity() ;
+    
+    @Override
+    public void store(Storage storage) throws StorageException {
+      //what is this entity and namespaces
+      try {
+        ObjectOutputStream o = new ObjectOutputStream(storage.create(getNamespace(), getEntity()));
+        o.writeObject(getConfiguration());
+      } catch (IOException e) {
+       throw new StorageException(e.getMessage());
+      }
+      
+
+    }
+
+    @Override
+    public void restore(Storage storage) throws StorageException {
+      try {
+        ObjectInputStream o = new ObjectInputStream(storage.open(getNamespace(), getEntity()));
+        setConfiguration((V)o.readObject());
+      } catch (IOException e) {
+        throw new StorageException(e.getMessage());
+      } catch (ClassNotFoundException e) {
+        throw new StorageException(e.getMessage());
+      }
+
+    }
+
+    @Override
+    public void delete(Storage storage) throws StorageException {
+        storage.delete(getNamespace(), getEntity());
+        setConfiguration(null);
+    }
+ 
 }

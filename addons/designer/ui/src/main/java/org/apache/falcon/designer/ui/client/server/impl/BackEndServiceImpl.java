@@ -23,13 +23,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.falcon.client.FalconCLIException;
 import org.apache.falcon.designer.ui.client.server.BackEndService;
 import org.apache.falcon.designer.ui.hcat.HCatClientFactory;
 import org.apache.falcon.designer.ui.rest.DesignerRestClient;
 import org.apache.falcon.designer.ui.rest.FalconRestClient;
-import org.apache.falcon.designer.ui.rest.RestClient;
 import org.apache.falcon.designer.ui.util.UtilFunctions;
 import org.apache.falcon.designer.ui.vo.FeedVO;
 import org.apache.falcon.resource.EntityList;
@@ -44,7 +42,6 @@ import org.apache.hcatalog.common.HCatException;
 import org.apache.hcatalog.data.schema.HCatFieldSchema;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class BackEndServiceImpl extends RemoteServiceServlet implements
@@ -142,19 +139,23 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
 
       returnFeed.setFrequency(feedDetails.getFrequency().toString());
       returnFeed.setClusters(clusterList);
-
+      
+      String clusterName = null;
       for (Cluster eachCluster : feedDetails.getClusters().getClusters()) {
         clusterList.add(eachCluster.getName());
-        if (returnFeed.getTableName() == null) {
+        if (returnFeed.getTableName() == null && eachCluster
+            .getTable() !=null ) {
           returnFeed.setTableName(UtilFunctions.getTableName(eachCluster
               .getTable().getUri()));
           returnFeed.setDatabaseName(UtilFunctions.getDatabase(eachCluster
               .getTable().getUri()));
+          clusterName = eachCluster.getName();
+          break;
         }
       }
       if (clusterList.size() > 0) {
         org.apache.falcon.entity.v0.cluster.Cluster clusterDetails =
-            rClient.getClusterDefinition(clusterList.get(0));
+            rClient.getClusterDefinition(clusterName);
         for (Interface eachInterface : clusterDetails.getInterfaces()
             .getInterfaces()) {
           if (eachInterface.getType().equals(Interfacetype.REGISTRY)) {
@@ -172,7 +173,7 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
             + feedDetails.toShortString());
 
     try {
-      Thread.sleep(1000);
+      Thread.sleep(100);
     } catch (InterruptedException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

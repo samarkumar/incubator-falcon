@@ -32,6 +32,10 @@
     <name>Apache Falcon Designer Action</name>
     <packaging>jar</packaging>
 
+	<properties>
+		<designer.version>0.6-incubating-SNAPSHOT</designer.version>
+	</properties>
+
     <dependencies>
         <dependency>
             <groupId>org.testng</groupId>
@@ -41,6 +45,11 @@
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-json</artifactId>
 		</dependency>
+		<dependency>
+		<groupId>org.apache.falcon.designer</groupId>
+		<artifactId>designer-core</artifactId>
+		<version>${designer.version}</version>
+	</dependency>
     </dependencies>
 
 </project>

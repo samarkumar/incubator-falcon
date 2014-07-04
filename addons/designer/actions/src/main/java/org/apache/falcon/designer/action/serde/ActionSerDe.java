@@ -15,16 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.falcon.designer.action.serde;
 
-package org.apache.falcon.designer.configuration;
+import org.apache.falcon.designer.configuration.ActionConfiguration;
 
-/**
- * This is the configuration that primitives will use
- * to configure their instance.
- */
-public interface Configuration {
-  
-  public String getName();
+public interface ActionSerDe<T extends ActionConfiguration> {
 
-  public String getCategory();
+  /**
+   * Serialize it from a action type to string type
+   * 
+   * @param act
+   * @return
+   */
+  String serialize(T act);
+
+  /**
+   * Deserialize from string to object of Action type
+   * 
+   * @param actString
+   * @return
+   */
+  T deserialize(String actString);
+
 }

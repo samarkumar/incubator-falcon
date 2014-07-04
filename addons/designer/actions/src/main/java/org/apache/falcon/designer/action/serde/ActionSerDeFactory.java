@@ -16,15 +16,23 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.configuration;
+package org.apache.falcon.designer.action.serde;
 
-/**
- * This is the configuration that primitives will use
- * to configure their instance.
- */
-public interface Configuration {
-  
-  public String getName();
+import org.apache.falcon.designer.action.serde.impl.EmailActionSerde;
+import org.apache.falcon.designer.type.ActionTypes;
 
-  public String getCategory();
+public class ActionSerDeFactory {
+
+  public ActionSerDe getActionSerde(ActionTypes actionType) {
+
+    switch (actionType) {
+    case EMAIL:
+      return new EmailActionSerde();
+    default:
+      return null;
+
+    }
+
+  }
+
 }
