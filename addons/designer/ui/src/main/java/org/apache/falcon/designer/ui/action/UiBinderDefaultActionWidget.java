@@ -27,6 +27,10 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Default Email Action Widget
+ *
+ */
 public class UiBinderDefaultActionWidget extends ActionWidget<DefaultActionVO> {
 
   private static LoginUiBinder uiBinder = GWT.create(LoginUiBinder.class);

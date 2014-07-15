@@ -94,7 +94,6 @@ public class RestClient {
 
   public String notEmpty(String str, String name) {
     if (str == null) {
-
       throw new IllegalArgumentException(name + " cannot be null");
     }
     if (str.length() == 0) {
@@ -104,15 +103,12 @@ public class RestClient {
   }
 
   public Feed getFeedDefinition(String entityName) throws FalconCLIException {
-
     return sendDefinitionRequest(Entities.DEFINITION, "feed", entityName)
         .getEntity(Feed.class);
-
   }
 
   public Cluster getClusterDefinition(String entityName)
       throws FalconCLIException {
-
     return sendDefinitionRequest(Entities.DEFINITION, "cluster", entityName)
         .getEntity(Cluster.class);
   }

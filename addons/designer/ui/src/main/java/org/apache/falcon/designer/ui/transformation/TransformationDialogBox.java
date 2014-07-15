@@ -32,10 +32,9 @@ public class TransformationDialogBox extends DialogBox {
   
   private TransformationWidget actionWidget;
 
-  public TransformationDialogBox(
-      final @SuppressWarnings("rawtypes") TransformationWidget actionWidget) {
+  public TransformationDialogBox(final TransformationWidget actionWidget) {
+    
     this.actionWidget = actionWidget;
-
     getElement().getStyle().setZIndex(1);
     setGlassEnabled(true);
     setModal(true);
@@ -49,29 +48,27 @@ public class TransformationDialogBox extends DialogBox {
 
       @Override
       public void onClick(ClickEvent event) {
-        logger.info(actionWidget.getCurrentActionVO().toString());
+        logger.info(actionWidget.getValue().toString());
         hide();
 
       }
     });
-    
     
     clearButton.addClickHandler(new ClickHandler() {
 
       @Override
       public void onClick(ClickEvent event) {
         actionWidget.clear();
-       
 
       }
     });
 
-    HorizontalPanel buttons = new HorizontalPanel();
-    buttons.add(okButton);
-    buttons.add(clearButton);
+    HorizontalPanel hPanel = new HorizontalPanel();
+    hPanel.add(okButton);
+    hPanel.add(clearButton);
     VerticalPanel vPanel = new VerticalPanel();
     vPanel.add(actionWidget);
-    vPanel.add(buttons);
+    vPanel.add(hPanel);
     add(vPanel);
 
   }

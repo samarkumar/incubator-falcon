@@ -28,7 +28,7 @@ public abstract class TransformationWidget extends Composite {
     return type;
   }
 
-  abstract public String getCurrentActionVO();
+  abstract public String getValue();
 
   public void setType(String type) {
     this.type = type;
@@ -43,4 +43,9 @@ public abstract class TransformationWidget extends Composite {
   }
 
   abstract public void clear();
+  
+  @Override
+  public String toString() {
+    return getValue();
+  }
 }

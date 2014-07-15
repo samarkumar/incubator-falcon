@@ -89,7 +89,6 @@ public class FalconRestClient {
     service = client.resource(UriBuilder.fromUri(baseUrl).build());
     client.resource(UriBuilder.fromUri(baseUrl).build());
     authenticationToken = getToken(baseUrl);
-    // addHeaders();
   }
 
   public static AuthenticatedURL.Token getToken(String baseUrl)

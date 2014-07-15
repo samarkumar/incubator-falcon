@@ -28,35 +28,35 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class ImageWithText extends Composite implements HasClickHandlers {
+public abstract class ImageWithText extends Composite implements
+    HasClickHandlers {
 
   private Label caption;
   private Image image;
 
-  public ImageWithText(String text, String url) {
+  public ImageWithText(final String text, final String url) {
 
     image = new Image(url);
     image.setSize("100%", "50px");
-
     caption = new Label();
     caption.setText(text);
     caption.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
     VerticalPanel panel = new VerticalPanel();
     panel.add(image);
     panel.add(caption);
-
     initWidget(panel);
 
   }
 
-  void setImageSize(String width, String height) {
+  public void setImageSize(final String width, final String height) {
     image.setSize(width, height);
   }
 
   @Override
-  public HandlerRegistration addClickHandler(ClickHandler arg0) {
+  public HandlerRegistration addClickHandler(final ClickHandler arg0) {
     return addDomHandler(arg0, ClickEvent.getType());
   }
+
+  abstract public String getValue();
 
 }

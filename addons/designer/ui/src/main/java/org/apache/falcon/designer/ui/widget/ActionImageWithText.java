@@ -18,12 +18,18 @@
 
 package org.apache.falcon.designer.ui.widget;
 
+import org.apache.falcon.designer.ui.util.Constants;
 
 public class ActionImageWithText extends ImageWithText {
 
   public ActionImageWithText(String text) {
-    super(text, "http://firedupculture.com/wp-content/blogs.dir/10/files/2014/01/action-hi.png");
+    super(text, Constants.ACTION_GIF);
     setSize("50px", "50px");
+  }
+
+  @Override
+  public String getValue() {
+    return "default:action";
   }
 
 }

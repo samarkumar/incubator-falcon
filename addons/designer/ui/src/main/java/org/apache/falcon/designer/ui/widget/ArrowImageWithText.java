@@ -18,14 +18,42 @@
 
 package org.apache.falcon.designer.ui.widget;
 
+import java.util.Map;
+
+import org.apache.falcon.designer.ui.transformation.TransformationDialogBox;
+import org.apache.falcon.designer.ui.transformation.TransformationWidgetFactory;
+import org.apache.falcon.designer.ui.util.Constants;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 
 public class ArrowImageWithText extends ImageWithText {
 
-  public ArrowImageWithText(String text) {
-    super(
-        text,
-        "http://etc-mysitemyway.s3.amazonaws.com/icons/legacy-previews/icons/glossy-black-icons-arrows/007979-glossy-black-icon-arrows-arrow-thick-right.png");
+  private final TransformationDialogBox emailAction;
 
+  public ArrowImageWithText(String text, final String type,
+      final Map<String, String> schema) {
+    super(text, Constants.ARROW_GIF);
     this.setSize("75px", "50px");
+
+    this.emailAction =
+        TransformationWidgetFactory.getTransformationWidget(type.toUpperCase(),
+            schema);
+    this.addClickHandler(new ClickHandler() {
+
+      @Override
+      public void onClick(ClickEvent event) {
+        getTransformationDialogBox().center();
+      }
+    });
+  }
+
+  @Override
+  public String getValue() {
+    return emailAction.getActionWidget().getValue();
+  }
+
+  TransformationDialogBox getTransformationDialogBox() {
+    return this.emailAction;
   }
 }

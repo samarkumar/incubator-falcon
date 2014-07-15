@@ -22,6 +22,9 @@ import org.apache.falcon.designer.ui.vo.ActionVO;
 
 import com.google.gwt.user.client.ui.Composite;
 
+/*
+ * Abstract class representing a action widget
+ */
 public abstract class ActionWidget<T extends ActionVO> extends Composite {
 
   private String type;
@@ -36,7 +39,7 @@ public abstract class ActionWidget<T extends ActionVO> extends Composite {
     this.type = type;
   }
 
-  ActionWidget(String type) {
+  public ActionWidget(final String type) {
     if (type == null) {
       this.type = "DEFAULT";
     } else {

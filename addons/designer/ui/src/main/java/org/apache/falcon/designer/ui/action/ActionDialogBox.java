@@ -19,6 +19,7 @@
 package org.apache.falcon.designer.ui.action;
 
 import java.util.logging.Logger;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -26,22 +27,27 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+/**
+ * Create a Dialog for an action. The dialog box would be a wrapper on top of
+ * particular ActionWidget
+ * 
+ */
 public class ActionDialogBox extends DialogBox {
 
-  private final static Logger logger = Logger.getLogger("FalconDesignerUi");
-  
+  private final static Logger logger = Logger.getLogger("ActionDialogBox");
+
+  @SuppressWarnings("rawtypes")
   private ActionWidget actionWidget;
 
   public ActionDialogBox(
-      final @SuppressWarnings("rawtypes") ActionWidget actionWidget) {
-    this.actionWidget = actionWidget;
+      @SuppressWarnings("rawtypes") final ActionWidget actionWidget) {
 
+    this.actionWidget = actionWidget;
     getElement().getStyle().setZIndex(1);
     setGlassEnabled(true);
     setModal(true);
     setAnimationEnabled(true);
     setTitle("Waiting");
-
     Label okButton = new Label("OK");
     Label clearButton = new Label("Clear");
 
@@ -54,28 +60,24 @@ public class ActionDialogBox extends DialogBox {
 
       }
     });
-    
-    
-    clearButton.addClickHandler(new ClickHandler() {
 
+    clearButton.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent event) {
         actionWidget.clear();
-       
-
       }
     });
 
-    HorizontalPanel buttons = new HorizontalPanel();
-    buttons.add(okButton);
-    buttons.add(clearButton);
+    HorizontalPanel hPanel = new HorizontalPanel();
+    hPanel.add(okButton);
+    hPanel.add(clearButton);
     VerticalPanel vPanel = new VerticalPanel();
     vPanel.add(actionWidget);
-    vPanel.add(buttons);
+    vPanel.add(hPanel);
     add(vPanel);
-
   }
 
+  @SuppressWarnings("rawtypes")
   public ActionWidget getActionWidget() {
     return actionWidget;
   }

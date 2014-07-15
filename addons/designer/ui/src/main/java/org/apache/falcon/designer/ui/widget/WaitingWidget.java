@@ -18,34 +18,35 @@
 
 package org.apache.falcon.designer.ui.widget;
 
+import org.apache.falcon.designer.ui.util.Constants;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Image;
 
 public class WaitingWidget {
 
-  private static final DialogBox d = new DialogBox();
+  private static final DialogBox dialogWaiting = new DialogBox();
 
   private static final String loadingURL = GWT.getModuleBaseForStaticFiles()
-      + "images/715.GIF";
+      + Constants.WAITING_IMAGE;
 
   static {
 
-    d.getElement().getStyle().setZIndex(1);
-    d.setGlassEnabled(true);
-    d.setModal(true);
-    d.setAnimationEnabled(true);
-    d.setTitle("Waiting");
-    d.add(new Image(loadingURL));
+    dialogWaiting.getElement().getStyle().setZIndex(1);
+    dialogWaiting.setGlassEnabled(true);
+    dialogWaiting.setModal(true);
+    dialogWaiting.setAnimationEnabled(true);
+    dialogWaiting.setTitle("Waiting");
+    dialogWaiting.add(new Image(loadingURL));
   }
 
   public static void show() {
-    d.center();
+    dialogWaiting.center();
   }
 
   public static void hide() {
-
-    d.hide();
+    dialogWaiting.hide();
   }
 
 }

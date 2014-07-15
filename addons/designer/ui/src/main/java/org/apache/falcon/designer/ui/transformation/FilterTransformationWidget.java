@@ -18,6 +18,7 @@
 
 package org.apache.falcon.designer.ui.transformation;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.user.client.ui.FlexTable;
@@ -29,17 +30,19 @@ public class FilterTransformationWidget extends TransformationWidget {
 
   TextBox toEmailTextBox = new TextBox();
  
-  private Map<String, String> schema  ;
+ 
+  private Map<String, TextBox> inputHolders = new HashMap<String, TextBox>();
 
   public FilterTransformationWidget(Map<String, String> schema) {
     super("EMAIL");
-    this.schema = schema;
     VerticalPanel panel = new VerticalPanel();
     FlexTable schemaFlexTable = new FlexTable();
     int index = -1;
     for(String eachColumn:schema.keySet()){
+      TextBox currentTextBox = new  TextBox();
       schemaFlexTable.setWidget(++index, 0, new Label(eachColumn));
-      schemaFlexTable.setWidget(index, 1, new  TextBox());
+      schemaFlexTable.setWidget(index, 1, currentTextBox);
+      inputHolders.put(eachColumn, currentTextBox);
     }
     panel.add(schemaFlexTable);
     initWidget(panel);
@@ -47,8 +50,13 @@ public class FilterTransformationWidget extends TransformationWidget {
   }
 
   @Override
-  public String getCurrentActionVO() {
-    return schema.toString();
+  public String getValue() {
+    StringBuffer sb = new StringBuffer();
+    for(String eachColumn: inputHolders.keySet()){
+      sb.append(eachColumn).append(":").append(inputHolders.get(eachColumn).getText()).append(" ");
+      
+    }
+    return sb.toString();
   }
 
   @Override

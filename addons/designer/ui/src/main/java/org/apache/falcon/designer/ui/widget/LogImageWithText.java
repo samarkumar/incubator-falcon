@@ -18,12 +18,18 @@
 
 package org.apache.falcon.designer.ui.widget;
 
+import org.apache.falcon.designer.ui.util.Constants;
 
 public class LogImageWithText extends ImageWithText {
 
   public LogImageWithText(String text) {
-    super(text, "http://freshdata.sk/assets/design/icon_files.png");
+    super(text, Constants.LOG_IMAGE);
     setSize("50px", "50px");
+  }
+
+  @Override
+  public String getValue() {
+    return "default:schema";
   }
 
 }

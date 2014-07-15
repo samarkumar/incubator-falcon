@@ -18,6 +18,10 @@
 
 package org.apache.falcon.designer.ui.action;
 
+/**
+ * A factory to get a specific action widget. eg email shell etc
+ *
+ */
 public class ActionWidgetFactory {
 
   public static ActionDialogBox getActionFactor(String actionType) {

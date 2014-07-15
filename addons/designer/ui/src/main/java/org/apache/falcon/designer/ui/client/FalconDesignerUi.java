@@ -25,13 +25,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-
 import org.apache.falcon.designer.ui.action.ActionDialogBox;
 import org.apache.falcon.designer.ui.action.ActionWidgetFactory;
 import org.apache.falcon.designer.ui.client.server.BackEndService;
 import org.apache.falcon.designer.ui.client.server.BackEndServiceAsync;
-import org.apache.falcon.designer.ui.transformation.TransformationDialogBox;
-import org.apache.falcon.designer.ui.transformation.TransformationWidgetFactory;
 import org.apache.falcon.designer.ui.vo.FeedVO;
 import org.apache.falcon.designer.ui.widget.ActionImageWithText;
 import org.apache.falcon.designer.ui.widget.ArrowImageWithText;
@@ -39,7 +36,6 @@ import org.apache.falcon.designer.ui.widget.FeedInformation;
 import org.apache.falcon.designer.ui.widget.ImageWithText;
 import org.apache.falcon.designer.ui.widget.LogImageWithText;
 import org.apache.falcon.designer.ui.widget.WaitingWidget;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
@@ -74,22 +70,24 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * The main entry poit class respresenting the designer UI
+ * 
+ */
 public class FalconDesignerUi implements EntryPoint {
 
   private BackEndServiceAsync backEndService = (BackEndServiceAsync) GWT
       .create(BackEndService.class);
 
   private final static Logger logger = Logger.getLogger("FalconDesignerUi");
- 
-  
-  private Button addStockButton = new Button("Add");
+
   final static String TRANSFORMATIONLABEL = "Transformation";
   final static String SCHEMALABLE = "Schema";
   final static String ACTIONLABLE = "Actions";
   final static String PIPELINESLABEL = "Piplelines";
 
-  private static final String[] pipelinesData =
-      { "Analytics", "Datawarehousing", "Feedback" };
+  private static final String[] pipelinesData = { "Analytics",
+  "Datawarehousing", "Feedback" };
 
   private static final String hundredPercent = "100%";
   private static final int HeaderRowIndex = 0;
@@ -122,14 +120,11 @@ public class FalconDesignerUi implements EntryPoint {
 
     SplitLayoutPanel leftPanel = new SplitLayoutPanel();
     SplitLayoutPanel center = new SplitLayoutPanel();
-
     Style e = workPanel.getElement().getStyle();
 
     e.setPosition(Position.ABSOLUTE);
     e.setOverflow(Overflow.VISIBLE);
 
-    HTML contents = new HTML("some data");
-    workPanel.add(contents);
     // workPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 
     outputTab.setStyleName("gwt-TabLayoutPanel");
@@ -151,7 +146,7 @@ public class FalconDesignerUi implements EntryPoint {
       @Override
       public void onDragOver(DragOverEvent dragoverevent) {
         logger.log(Level.INFO, "dragged1");
-        
+
         focusPanel.getElement().getStyle().setBackgroundColor("#99eedf");
 
       }
@@ -177,24 +172,16 @@ public class FalconDesignerUi implements EntryPoint {
         logger.log(Level.INFO, "passed value" + event.getSource() + "get type "
             + type);
         if (TRANSFORMATIONLABEL.equals(type)) {
-          ImageWithText log = new ArrowImageWithText(data + "(" + type + ")");
-          workPanel.add(log, eventX, eventY - 20);
-          
-          //some mock schema . have to find the best to get schema of the last element
+
+          // some mock schema . have to find the best to get schema of the last
+          // element
           final Map<String, String> schema = new HashMap<String, String>();
           schema.put("column1", "int");
           schema.put("column2", "varchar");
-          
-          log.addClickHandler(new ClickHandler() {
-            
-            TransformationDialogBox emailAction = TransformationWidgetFactory
-                .getTransformationWidget(data.toUpperCase() , schema);
-            
-            @Override
-            public void onClick(ClickEvent event) {
-              emailAction.center();
-            }
-          });
+
+          ImageWithText log =
+              new ArrowImageWithText(data + "(" + type + ")", data, schema);
+          workPanel.add(log, eventX, eventY - 20);
 
         } else if (ACTIONLABLE.equals(type)) {
 
@@ -208,93 +195,90 @@ public class FalconDesignerUi implements EntryPoint {
 
             @Override
             public void onClick(ClickEvent clickEventInst) {
-              logger.log(Level.INFO, " ------------ action widget ------------" + emailAction.getActionWidget().getCurrentActionVO());
+              logger.log(Level.INFO, " ------------ action widget ------------"
+                  + emailAction.getActionWidget().getCurrentActionVO());
               emailAction.center();
 
             }
           });
 
           workPanel.add(log, eventX, eventY);
-          // workPanel.add(log ,100, 50);
-          // log.setVisible(true);
 
         } else if (SCHEMALABLE.equals(type)) {
           ImageWithText log = null;
-            log = new LogImageWithText(data);
+          log = new LogImageWithText(data);
 
-            log.addClickHandler(new ClickHandler() {
+          log.addClickHandler(new ClickHandler() {
 
-              @Override
-              public void onClick(ClickEvent clickEventInst) {
+            @Override
+            public void onClick(ClickEvent clickEventInst) {
 
-                WaitingWidget.show();
-                logger
-                    .log(
-                        Level.INFO,
-                        "here ------------ ------------ ------------ ------------ ------------ ------------");
+              WaitingWidget.show();
+              logger
+                  .log(
+                      Level.INFO,
+                      "here ------------ ------------ ------------ ------------ ------------ ------------");
 
-                final AsyncCallback<Map<String, String>> callbackPopulateOutPutTab =
-                    new AsyncCallback<Map<String, String>>() {
-                      public void onSuccess(Map<String, String> result) {
-                        outputHTML.setText(result.toString());
+              final AsyncCallback<Map<String, String>> callbackPopulateOutPutTab =
+                  new AsyncCallback<Map<String, String>>() {
+                    public void onSuccess(Map<String, String> result) {
+                      outputHTML.setText(result.toString());
 
-                        FlexTable schemaFlexTable = new FlexTable();
-                        int rowNumber = 0;
-                        for (Entry<String, String> eachEntry : result
-                            .entrySet()) {
-                          schemaFlexTable.setText(rowNumber, 0,
-                              eachEntry.getKey());
-                          schemaFlexTable.setText(rowNumber, 1,
-                              eachEntry.getValue());
-                          rowNumber++;
-                        }
-
-                        schemaTab.clear();
-                        schemaTab.add(schemaFlexTable);
-                        outputTab.add(schemaTab, "Schema");
-
-                        WaitingWidget.hide();
-
+                      FlexTable schemaFlexTable = new FlexTable();
+                      int rowNumber = 0;
+                      for (Entry<String, String> eachEntry : result.entrySet()) {
+                        schemaFlexTable.setText(rowNumber, 0,
+                            eachEntry.getKey());
+                        schemaFlexTable.setText(rowNumber, 1,
+                            eachEntry.getValue());
+                        rowNumber++;
                       }
 
-                      @Override
-                      public void onFailure(Throwable caught) {
-                        caught.printStackTrace();
+                      schemaTab.clear();
+                      schemaTab.add(schemaFlexTable);
+                      outputTab.add(schemaTab, "Schema");
 
-                      }
-                    };
+                      WaitingWidget.hide();
 
-                final AsyncCallback<FeedVO> callbackPopulateApplicableClusterPanel =
-                    new AsyncCallback<FeedVO>() {
-                      public void onSuccess(FeedVO result) {
+                    }
 
-                        FeedInformation feedInformationPanel =
-                            new FeedInformation("Applicable Clusters", result
-                                .getClusters(), "Frequency:");
-                        applicableClusterPanel.clear();
-                        applicableClusterPanel.add(feedInformationPanel);
-                        outputHTML.setText(result.toString());
+                    @Override
+                    public void onFailure(Throwable caught) {
+                      logger.severe(caught.getMessage());
 
-                        backEndService.getColumnsForTable(result.getHcatURL(),
-                            result.getDatabaseName(), result.getTableName(),
-                            callbackPopulateOutPutTab);
+                    }
+                  };
 
-                      }
+              final AsyncCallback<FeedVO> callbackPopulateApplicableClusterPanel =
+                  new AsyncCallback<FeedVO>() {
+                    public void onSuccess(FeedVO result) {
 
-                      @Override
-                      public void onFailure(Throwable caught) {
-                        caught.printStackTrace();
+                      FeedInformation feedInformationPanel =
+                          new FeedInformation("Applicable Clusters", result
+                              .getClusters(), "Frequency:");
+                      applicableClusterPanel.clear();
+                      applicableClusterPanel.add(feedInformationPanel);
+                      outputHTML.setText(result.toString());
 
-                      }
-                    };
+                      backEndService.getColumnsForTable(result.getHcatURL(),
+                          result.getDatabaseName(), result.getTableName(),
+                          callbackPopulateOutPutTab);
 
-                backEndService.getFeedDetails(data,
-                    callbackPopulateApplicableClusterPanel);
+                    }
 
-              }
-            });
+                    @Override
+                    public void onFailure(Throwable caught) {
+                      logger.severe(caught.getMessage());
 
-         
+                    }
+                  };
+
+              backEndService.getFeedDetails(data,
+                  callbackPopulateApplicableClusterPanel);
+
+            }
+          });
+
           // will show details on clicking on the logs
           workPanel.add(log);
         } else {
@@ -332,14 +316,6 @@ public class FalconDesignerUi implements EntryPoint {
 
     // Associate the Main panel with the HTML host page.
     RootPanel.get("bodyPanel").add(mainPanel);
-
-    addStockButton.addClickHandler(new ClickHandler() {
-      public void onClick(ClickEvent event) {
-        logger.log(Level.INFO, " get event source " + event.getSource()
-            + " data is ");
-        // addStock();
-      }
-    });
 
   }
 
@@ -415,7 +391,7 @@ public class FalconDesignerUi implements EntryPoint {
 
           @Override
           public void onFailure(Throwable caught) {
-            caught.printStackTrace();
+            logger.severe(caught.getMessage());
           }
         };
 
@@ -452,7 +428,7 @@ public class FalconDesignerUi implements EntryPoint {
 
           @Override
           public void onFailure(Throwable caught) {
-            caught.printStackTrace();
+            logger.severe(caught.getMessage());
           }
         };
 
@@ -493,7 +469,7 @@ public class FalconDesignerUi implements EntryPoint {
 
           @Override
           public void onFailure(Throwable caught) {
-            caught.printStackTrace();
+            logger.severe(caught.getMessage());
           }
         };
 
@@ -547,7 +523,9 @@ public class FalconDesignerUi implements EntryPoint {
     Iterator<Widget> allWidgets = workPanel.iterator();
     while (allWidgets.hasNext()) {
       Widget currentWidget = allWidgets.next();
-      logger.log(Level.INFO," Widget " + currentWidget.getClass()  + "left" + workPanel.getWidgetLeft(currentWidget) );
+      logger.info(" Widget " + currentWidget.getClass() + "left"
+          + workPanel.getWidgetLeft(currentWidget) + " value "
+          + ((ImageWithText) currentWidget).getValue());
 
     }
 

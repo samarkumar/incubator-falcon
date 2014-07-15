@@ -30,11 +30,9 @@ public class FeedInformation extends Composite {
   public FeedInformation(String heading, List<String> clusters, String footer) {
 
     VerticalPanel panel = new VerticalPanel();
-
     Label headingLabel = new Label();
     headingLabel.setText(heading);
     panel.add(headingLabel);
-
     for (String clusterHeading : clusters) {
       CheckBox checkbox = new CheckBox(clusterHeading);
       checkbox.setValue(true);
@@ -43,9 +41,7 @@ public class FeedInformation extends Composite {
 
     Label footerLabel = new Label();
     footerLabel.setText(heading);
-
     panel.add(footerLabel);
-
     initWidget(panel);
   };
 

@@ -47,32 +47,26 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class BackEndServiceImpl extends RemoteServiceServlet implements
     BackEndService {
 
-  /**
-   * 
-   */
   private static final long serialVersionUID = 9135387885271735102L;
   private transient FalconRestClient rClient;
   private transient DesignerRestClient desingerRestClient;
 
-  private static final String falconRestURL = "https://databusdev2.mkhoj.com:15443/";
+  // TODO remove hard coding eventually
+  private static final String falconRestURL =
+      "https://databusdev2.mkhoj.com:15443/";
   private static final String desginerRestURL =
       "http://localhost:8080/designer-rest";
-  // private static final String hcatThriftURL = "http://databusdev2:15000";
 
-  {
-    try {
-      rClient = new FalconRestClient(falconRestURL);
-      desingerRestClient = new DesignerRestClient(desginerRestURL);
+  public BackEndServiceImpl() throws Exception {
 
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    this.rClient = new FalconRestClient(falconRestURL);
+    this.desingerRestClient = new DesignerRestClient(desginerRestURL);
+
   }
 
   @Override
   public List<String> getAllFeedNames() {
     try {
-
       EntityList eList = rClient.getEntityList("feed");
       List<String> returnList = new ArrayList<String>();
       for (EntityElement eachElement : eList.getElements()) {
@@ -88,15 +82,15 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
 
   @Override
   public List<String> getAllActions() {
-
     try {
       return jsonArrayToList(desingerRestClient.getAllActions());
     } catch (Exception e) {
       e.printStackTrace();
-      return  Arrays.asList("Notify", "Email", "JMS",
-          "HTTP", "Remote", "Shell", "Ship", "DB Export");
+      // TODO assuming designer rest server is not running and throw error so
+      // for testing purpose. to be removed.
+      return Arrays.asList("Notify", "Email", "JMS", "HTTP", "Remote", "Shell",
+          "Ship", "DB Export");
     }
-
   }
 
   @Override
@@ -105,16 +99,16 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
       return jsonArrayToList(desingerRestClient.getAllTransformations());
     } catch (Exception e) {
       e.printStackTrace();
-      
-      return  Arrays.asList("Project", "Filter",
-          "Aggregate", "Partition", "Join", "Union", "Rollup");
+      // TODO assuming designer rest server is not running and throw error so
+      // added for testing purpose. to be removed.
+      return Arrays.asList("Project", "Filter", "Aggregate", "Partition",
+          "Join", "Union", "Rollup");
     }
   }
 
   private List<String> jsonArrayToList(JSONArray jsonArrayInst) {
 
     List<String> listOfNames = new ArrayList<String>();
-
     try {
       for (int index = 0; index < jsonArrayInst.length(); index++) {
         listOfNames.add(jsonArrayInst.getString(index));
@@ -122,7 +116,6 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return listOfNames;
 
   }
@@ -130,7 +123,6 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
   public FeedVO getFeedDetails(String feedName) {
 
     FeedVO returnFeed = new FeedVO();
-
     Feed feedDetails;
     try {
 
@@ -139,12 +131,11 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
 
       returnFeed.setFrequency(feedDetails.getFrequency().toString());
       returnFeed.setClusters(clusterList);
-      
+
       String clusterName = null;
       for (Cluster eachCluster : feedDetails.getClusters().getClusters()) {
         clusterList.add(eachCluster.getName());
-        if (returnFeed.getTableName() == null && eachCluster
-            .getTable() !=null ) {
+        if (returnFeed.getTableName() == null && eachCluster.getTable() != null) {
           returnFeed.setTableName(UtilFunctions.getTableName(eachCluster
               .getTable().getUri()));
           returnFeed.setDatabaseName(UtilFunctions.getDatabase(eachCluster
@@ -168,19 +159,7 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
       e.printStackTrace();
       return null;
     }
-    System.out
-        .println("here  ************ ************ ************ ************"
-            + feedDetails.toShortString());
-
-    try {
-      Thread.sleep(100);
-    } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-
     return returnFeed;
-
   }
 
   public String getClusters() {
@@ -198,16 +177,14 @@ public class BackEndServiceImpl extends RemoteServiceServlet implements
 
   }
 
-  public Map<String, String> getColumnsForTable(String hcatUrl, String dbName,
-      String tableName) {
+  public Map<String, String> getColumnsForTable(final String hcatUrl, final String dbName,
+      final String tableName) {
 
     Map<String, String> columns = new HashMap<String, String>();
     try {
       HCatClient hcatClientInstance = HCatClientFactory.getHCatClient(hcatUrl);
       List<HCatFieldSchema> schemaList;
-
       schemaList = hcatClientInstance.getTable(dbName, tableName).getCols();
-
       for (HCatFieldSchema eachColumnSchema : schemaList) {
         columns.put(eachColumnSchema.getName(),
             eachColumnSchema.getTypeString());

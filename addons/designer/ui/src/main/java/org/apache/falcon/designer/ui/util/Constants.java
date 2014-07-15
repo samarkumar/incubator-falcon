@@ -18,26 +18,13 @@
 
 package org.apache.falcon.designer.ui.util;
 
-public class State {
+public class Constants {
 
-  public String type;
-  public String id;
-  
-  
-  public String getType() {
-    return type;
-  }
-  public void setType(String type) {
-    this.type = type;
-  }
-  public String getId() {
-    return id;
-  }
-  public void setId(String id) {
-    this.id = id;
-  }
-  
-  
- 
-
+  public static final String ACTION_GIF =
+      "http://firedupculture.com/wp-content/blogs.dir/10/files/2014/01/action-hi.png";
+  public static final String ARROW_GIF =
+      "http://etc-mysitemyway.s3.amazonaws.com/icons/legacy-previews/icons/glossy-black-icons-arrows/007979-glossy-black-icon-arrows-arrow-thick-right.png";
+  public static final String LOG_IMAGE =
+      "http://freshdata.sk/assets/design/icon_files.png";
+  public static final String WAITING_IMAGE = "images/715.GIF";
 }

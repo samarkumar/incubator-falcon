@@ -45,7 +45,6 @@ public class DesignerRestClient extends RestClient {
   }
 
   public JSONArray getAllTransformations() throws Exception {
-
     RestCalls tranformationsList = RestCalls.TRANSFORMATIONS_LIST;
     ClientResponse clientResponse =
         getService().path(tranformationsList.path)
