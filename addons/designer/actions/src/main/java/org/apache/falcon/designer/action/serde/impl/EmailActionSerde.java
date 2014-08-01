@@ -25,40 +25,43 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-
+/**
+ *Method to Serialize and Deserialze an Email Action Configuration object.
+ */
 public class EmailActionSerde implements ActionSerDe<EmailActionConfiguration> {
 
-  private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper();
 
-  @Override
-  public String serialize(EmailActionConfiguration act) {
+    @Override
+    public String serialize(EmailActionConfiguration act) {
 
-    String returnJsonString;
-    try {
-      returnJsonString = mapper.writeValueAsString(act);
-    } catch (JsonGenerationException jsonEx) {
-      return null;
-    } catch (JsonMappingException e) {
-      return null;
-    } catch (IOException e) {
-      return null;
+        String returnJsonString;
+        try {
+            returnJsonString = mapper.writeValueAsString(act);
+        } catch (JsonGenerationException jsonEx) {
+            return null;
+        } catch (JsonMappingException e) {
+            return null;
+        } catch (IOException e) {
+            return null;
+        }
+        return returnJsonString;
     }
-    return returnJsonString;
-  }
 
-  @Override
-  public EmailActionConfiguration deserialize(String actString) {
+    @Override
+    public EmailActionConfiguration deserialize(String actString) {
 
-    EmailActionConfiguration returnEmailAction;
-    try {
-      returnEmailAction = mapper.readValue(actString, EmailActionConfiguration.class);
-    } catch (JsonParseException e) {
-      return null;
-    } catch (JsonMappingException e) {
-      return null;
-    } catch (IOException e) {
-      return null;
+        EmailActionConfiguration returnEmailAction;
+        try {
+            returnEmailAction =
+                mapper.readValue(actString, EmailActionConfiguration.class);
+        } catch (JsonParseException e) {
+            return null;
+        } catch (JsonMappingException e) {
+            return null;
+        } catch (IOException e) {
+            return null;
+        }
+        return returnEmailAction;
     }
-    return returnEmailAction;
-  }
 }

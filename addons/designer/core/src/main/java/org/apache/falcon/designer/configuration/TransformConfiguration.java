@@ -17,17 +17,18 @@
  */
 package org.apache.falcon.designer.configuration;
 
-
+/**
+ * Concrete implementation of Transform Configuration.
+ */
 public abstract class TransformConfiguration implements Configuration {
 
- 
-private static final  String category = "TRANSFORM";
-  @Override
-  public String getCategory() {
-    // TODO Auto-generated method stub
-    return category;
-  }
 
-  
+    private static final String CATEGORY = "TRANSFORM";
+
+    @Override
+    public String getCategory() {
+        // TODO Auto-generated method stub
+        return CATEGORY;
+    }
 
 }

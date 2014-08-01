@@ -1,5 +1,5 @@
 /**
-aoch * Licensed to the Apache Software Foundation (ASF) under one
+ * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -28,82 +28,98 @@ import org.apache.falcon.designer.configuration.FlowConfig;
 import org.apache.falcon.designer.flow.serde.FlowSerde;
 import org.apache.falcon.designer.storage.Storage;
 import org.apache.falcon.designer.storage.StorageException;
-
+/**
+ * Concrete implementation for a Flow.
+ */
 public class Flow extends Primitive<Flow, FlowConfig> {
 
-  public Flow(FlowConfig process) {
-    this.setConfiguration(process);
-  }
+    private FlowConfig process;
 
-  @Override
-  protected Flow copy() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Iterable<Message> validate() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  protected Code doCompile() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  protected Flow doOptimize() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public String getNamespace() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public String getEntity() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public void store(Storage storage) throws StorageException {
-    // what is this entity and namespaces
-    try {
-      BufferedWriter o =
-          new BufferedWriter(new OutputStreamWriter(storage.create(
-              getNamespace(), getEntity())));
-      String serializedResource = FlowSerde.serialize(getConfiguration());
-      o.write(serializedResource);
-    } catch (IOException e) {
-      throw new StorageException(e.getMessage());
+    public Flow(FlowConfig process) {
+        this.process = process;
     }
 
-  }
-
-  @Override
-  public void restore(Storage storage) throws StorageException {
-    try {
-      BufferedReader o =
-          new BufferedReader(new InputStreamReader(storage.open(getNamespace(),
-              getEntity())));
-      String configInString = o.readLine();
-      setConfiguration(FlowSerde.deserialize(configInString));
-    } catch (IOException e) {
-      throw new StorageException(e.getMessage());
+    @Override
+    protected Flow copy() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
-  }
+    @Override
+    public Iterable<Message> validate() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-  @Override
-  public void delete(Storage storage) throws StorageException {
-    storage.delete(getNamespace(), getEntity());
-    setConfiguration(null);
-  }
+    @Override
+    protected Code doCompile() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected Flow doOptimize() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getNamespace() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getEntity() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void store(Storage storage) throws StorageException {
+        // what is this entity and namespaces
+        try {
+            BufferedWriter o =
+                new BufferedWriter(new OutputStreamWriter(storage.create(
+                    getNamespace(), getEntity())));
+            String serializedResource = FlowSerde.serialize(getConfiguration());
+            o.write(serializedResource);
+            o.close();
+        } catch (IOException e) {
+            throw new StorageException(e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void restore(Storage storage) throws StorageException {
+        try {
+            BufferedReader o =
+                new BufferedReader(new InputStreamReader(storage.open(
+                    getNamespace(), getEntity())));
+            String configInString = o.readLine();
+            setConfiguration(FlowSerde.deserialize(configInString));
+            o.close();
+        } catch (IOException e) {
+            throw new StorageException(e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void delete(Storage storage) throws StorageException {
+        storage.delete(getNamespace(), getEntity());
+        setConfiguration(null);
+    }
+
+    @Override
+    public void setConfiguration(FlowConfig config) {
+        this.process = config;
+    }
+
+    @Override
+    public FlowConfig getConfiguration() {
+        return process;
+    }
 
 }

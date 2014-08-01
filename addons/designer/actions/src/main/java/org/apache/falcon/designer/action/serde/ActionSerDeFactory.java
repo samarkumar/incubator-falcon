@@ -20,19 +20,21 @@ package org.apache.falcon.designer.action.serde;
 
 import org.apache.falcon.designer.action.serde.impl.EmailActionSerde;
 import org.apache.falcon.designer.type.ActionTypes;
-
+/**
+ * Factory class for all the ActionSerDe.
+ */
 public class ActionSerDeFactory {
 
-  public ActionSerDe getActionSerde(ActionTypes actionType) {
+    public ActionSerDe getActionSerde(ActionTypes actionType) {
 
-    switch (actionType) {
-    case EMAIL:
-      return new EmailActionSerde();
-    default:
-      return null;
+        switch (actionType) {
+        case EMAIL:
+            return new EmailActionSerde();
+        default:
+            return null;
+
+        }
 
     }
-
-  }
 
 }

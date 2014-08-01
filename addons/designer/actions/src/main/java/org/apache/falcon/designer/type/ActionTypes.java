@@ -17,19 +17,21 @@
  */
 
 package org.apache.falcon.designer.type;
-
+/**
+ * Types of Actions supported currently.
+ */
 public enum ActionTypes {
-  EMAIL("Email"), JMS("JMS"), HTTP("Http"), SHELL("Shell"), DBEXPORT(
-      "Db Export");
+    EMAIL("Email"), JMS("JMS"), HTTP("Http"), SHELL("Shell"), DBEXPORT(
+        "Db Export");
 
-  private String title;
+    private String title;
 
-  ActionTypes(String title) {
-    this.title = title;
-  }
+    ActionTypes(String title) {
+        this.title = title;
+    }
 
-  public String getTitle() {
-    return title;
-  }
+    public String getTitle() {
+        return title;
+    }
 
 }

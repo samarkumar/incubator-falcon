@@ -17,17 +17,16 @@
  */
 package org.apache.falcon.designer.configuration;
 
-
+/**
+ * Abstract ActionConfiguration extending Configuration.
+ */
 public abstract class ActionConfiguration implements Configuration {
 
- 
-private static final  String category = "ACTION";
-  @Override
-  public String getCategory() {
-    // TODO Auto-generated method stub
-    return category;
-  }
+    private static final String CATEGORY = "ACTION";
 
-  
+    @Override
+    public String getCategory() {
+        return CATEGORY;
+    }
 
 }

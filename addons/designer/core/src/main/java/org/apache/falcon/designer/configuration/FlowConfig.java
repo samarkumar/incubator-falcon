@@ -18,86 +18,47 @@
 
 package org.apache.falcon.designer.configuration;
 
-import java.util.Collection;
-import java.util.Map;
-
-import org.apache.falcon.designer.primitive.Primitive;
-
+/**
+ * Flow data.
+ */
 public class FlowConfig implements Configuration {
 
-  private Node root;
+    private String namespace;
+    private String entity;
+    private String name;
+    private static final String CATEGORY = "TRANSFORM";
 
-  private String namespace;
-  private String entity;
-
-  public static enum Condition {
-    CONDITION1, CONDITION2;
-  }
-
-  public static class Node {
-    private Map<Condition, Node> successors;
-    private Primitive<Primitive, Configuration> value;
-
-    public Node(Primitive value) {
-      this.value = value;
+    public FlowConfig(String namespace, String entity, String name) {
+        this.namespace = namespace;
+        this.entity = entity;
+        this.name = name;
 
     }
 
-    Node getNextNodeForCondition(Condition cond) {
-      if (successors != null) {
-        return successors.get(cond);
-      } else {
-        return null;
-      }
+    @Override
+    public String getCategory() {
+        return CATEGORY;
     }
 
-    public Primitive<Primitive, Configuration> getPrimitive() {
-      return value;
+    @Override
+    public String getName() {
+        return name;
     }
 
-    Collection<Node> getAllNextNodeForCondition(Condition cond) {
-      if (successors != null) {
-        return successors.values();
-      } else {
-        return null;
-      }
+    public String getNamespace() {
+        return namespace;
     }
 
-    void addSuccessor(Condition cond, Node sucessor) {
-      successors.put(cond, sucessor);
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
-  }
 
-  @Override
-  public String getCategory() {
-    // TODO Auto-generated method stub
-    return null;
-  }
+    public String getEntity() {
+        return entity;
+    }
 
-  @Override
-  public String getName() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  public Node getRoot() {
-    return root;
-  }
-
-  public String getNamespace() {
-    return namespace;
-  }
-
-  public void setNamespace(String namespace) {
-    this.namespace = namespace;
-  }
-
-  public String getEntity() {
-    return entity;
-  }
-
-  public void setEntity(String entity) {
-    this.entity = entity;
-  }
+    public void setEntity(String entity) {
+        this.entity = entity;
+    }
 
 }

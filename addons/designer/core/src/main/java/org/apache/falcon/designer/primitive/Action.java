@@ -43,11 +43,11 @@ import java.util.Map;
  */
 public abstract class Action<A extends Action, B extends ActionConfiguration> extends Primitive<A, B> {
 
-    protected final String type="ACTION";
+    protected  static final String TYPE="ACTION";
 
     @Nonnull
     public String getType() {
-        return type;
+        return TYPE;
     }
 
     /**

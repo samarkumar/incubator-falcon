@@ -576,6 +576,8 @@
                         <exclude>**/.settings</exclude>
                         <exclude>**/maven-eclipse.xml</exclude>
                         <exclude>**/.externalToolBuilders</exclude>
+                        <exclude>build/**</exclude>
+                        <exclude>test-output/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -585,6 +587,9 @@
                             <goal>check</goal>
                         </goals>
                         <phase>verify</phase>
+                        <configuration>
+							<failOnViolation>false</failOnViolation>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -610,7 +615,7 @@
                             <consoleOutput>true</consoleOutput>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <configLocation>falcon/checkstyle.xml</configLocation>
-			<failOnViolation>false</failOnViolation>
+							<failOnViolation>true</failOnViolation>
                             <skip>${skipCheck}</skip>
                         </configuration>
                     </execution>

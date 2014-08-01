@@ -37,19 +37,12 @@ import javax.annotation.Nullable;
  */
 public abstract class Primitive<T extends Primitive , V extends Configuration> implements Storeable {
 
-    protected V configuration;
-   
-
-    public void setConfiguration(@Nonnull V config) {
-        configuration = config;
-    }
+    public abstract void setConfiguration(V config);
 
     protected abstract T copy();
 
     @Nonnull
-    public V getConfiguration() {
-        return configuration;
-    }
+    public abstract V getConfiguration();
 
     /**
      * Perform a validation to see if the primitive configuration
@@ -118,34 +111,37 @@ public abstract class Primitive<T extends Primitive , V extends Configuration> i
     }
 
     protected abstract T doOptimize();
-    
-    public abstract String getNamespace() ;
+    public abstract String getNamespace();
+    public abstract String getEntity();
 
-    public abstract String getEntity() ;
-    
     @Override
     public void store(Storage storage) throws StorageException {
       //what is this entity and namespaces
-      try {
-        ObjectOutputStream o = new ObjectOutputStream(storage.create(getNamespace(), getEntity()));
-        o.writeObject(getConfiguration());
-      } catch (IOException e) {
-       throw new StorageException(e.getMessage());
-      }
-      
+        try {
+            ObjectOutputStream o =
+                new ObjectOutputStream(storage.create(getNamespace(),
+                    getEntity()));
+            o.writeObject(getConfiguration());
+            o.close();
+        } catch (IOException e) {
+            throw new StorageException(e.getMessage());
+        }
+
 
     }
 
     @Override
     public void restore(Storage storage) throws StorageException {
-      try {
-        ObjectInputStream o = new ObjectInputStream(storage.open(getNamespace(), getEntity()));
-        setConfiguration((V)o.readObject());
-      } catch (IOException e) {
-        throw new StorageException(e.getMessage());
-      } catch (ClassNotFoundException e) {
-        throw new StorageException(e.getMessage());
-      }
+        try {
+            ObjectInputStream o =
+                new ObjectInputStream(storage.open(getNamespace(), getEntity()));
+            setConfiguration((V) o.readObject());
+            o.close();
+        } catch (IOException e) {
+            throw new StorageException(e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new StorageException(e.getMessage());
+        }
 
     }
 
@@ -154,5 +150,5 @@ public abstract class Primitive<T extends Primitive , V extends Configuration> i
         storage.delete(getNamespace(), getEntity());
         setConfiguration(null);
     }
- 
+
 }

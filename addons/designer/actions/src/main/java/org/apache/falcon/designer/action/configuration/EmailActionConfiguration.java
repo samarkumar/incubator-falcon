@@ -18,50 +18,52 @@
 package org.apache.falcon.designer.action.configuration;
 
 import org.apache.falcon.designer.configuration.ActionConfiguration;
-
+/**
+ * Action object holding Email data.
+ */
 public class EmailActionConfiguration extends ActionConfiguration {
 
-  private String toEmails;
-  private String ccEmails;
-  private String subjects;
-  private String body;
+    private String toEmails;
+    private String ccEmails;
+    private String subjects;
+    private String body;
 
-  private static final String name = "Email";
+    private static final String NAME = "Email";
 
-  public String getToEmails() {
-    return toEmails;
-  }
+    public String getToEmails() {
+        return toEmails;
+    }
 
-  public void setToEmails(String toEmails) {
-    this.toEmails = toEmails;
-  }
+    public void setToEmails(String toEmails) {
+        this.toEmails = toEmails;
+    }
 
-  public String getCcEmails() {
-    return ccEmails;
-  }
+    public String getCcEmails() {
+        return ccEmails;
+    }
 
-  public void setCcEmails(String ccEmails) {
-    this.ccEmails = ccEmails;
-  }
+    public void setCcEmails(String ccEmails) {
+        this.ccEmails = ccEmails;
+    }
 
-  public String getSubjects() {
-    return subjects;
-  }
+    public String getSubjects() {
+        return subjects;
+    }
 
-  public void setSubjects(String subjects) {
-    this.subjects = subjects;
-  }
+    public void setSubjects(String subjects) {
+        this.subjects = subjects;
+    }
 
-  public String getBody() {
-    return body;
-  }
+    public String getBody() {
+        return body;
+    }
 
-  public void setBody(String body) {
-    this.body = body;
-  }
+    public void setBody(String body) {
+        this.body = body;
+    }
 
-  @Override
-  public String getName() {
-    return name;
-  }
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }
