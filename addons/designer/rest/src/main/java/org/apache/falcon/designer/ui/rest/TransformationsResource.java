@@ -34,8 +34,8 @@ import org.codehaus.jettison.json.JSONArray;
 @Path("transformations")
 public class TransformationsResource {
 
-  List<String> listOfTransformations = Arrays.asList("Project", "Filter",
-      "Aggregate", "Partition", "Join", "Union", "Rollup");
+  private final List<String> listOfTransformations = Arrays.asList("Project",
+      "Filter", "Aggregate", "Partition", "Join", "Union", "Rollup");
 
   // TODO very dirty way.. should find a generic way.. too lazy to create a pojo
   @GET
