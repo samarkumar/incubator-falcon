@@ -22,7 +22,7 @@ package org.apache.falcon.designer.configuration;
  * This is the configuration that primitives will use
  * to configure their instance.
  */
-public interface Configuration{
+public interface Configuration {
 
     String getName();
 
