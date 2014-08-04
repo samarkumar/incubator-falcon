@@ -436,8 +436,8 @@
         <module>archival</module>
         <module>rerun</module>
         <module>prism</module>
-        <!--<module>webapp</module>
-        <module>docs</module>-->
+        <module>webapp</module>
+        <module>docs</module>
     </modules>
 
     <repositories>
