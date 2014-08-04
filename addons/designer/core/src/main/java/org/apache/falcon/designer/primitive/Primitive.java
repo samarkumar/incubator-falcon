@@ -18,10 +18,14 @@
 
 package org.apache.falcon.designer.primitive;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
+import org.apache.falcon.designer.action.serde.PrimitiveSerDe;
 import org.apache.falcon.designer.configuration.Configuration;
 import org.apache.falcon.designer.storage.Storage;
 import org.apache.falcon.designer.storage.StorageException;
@@ -116,30 +120,30 @@ public abstract class Primitive<T extends Primitive , V extends Configuration> i
 
     @Override
     public void store(Storage storage) throws StorageException {
-      //what is this entity and namespaces
         try {
-            ObjectOutputStream o =
-                new ObjectOutputStream(storage.create(getNamespace(),
-                    getEntity()));
-            o.writeObject(getConfiguration());
-            o.close();
+            OutputStream outputStreamInst =
+                storage.create(getNamespace(), getEntity());
+            BufferedWriter bufferedWriterInst =
+                new BufferedWriter(new OutputStreamWriter(outputStreamInst));
+            String serializedResource = getPrimitiveSerde().serialize(getConfiguration());
+            bufferedWriterInst.write(serializedResource);
+            bufferedWriterInst.close();
         } catch (IOException e) {
             throw new StorageException(e.getMessage());
         }
-
 
     }
 
     @Override
     public void restore(Storage storage) throws StorageException {
         try {
-            ObjectInputStream o =
-                new ObjectInputStream(storage.open(getNamespace(), getEntity()));
-            setConfiguration((V) o.readObject());
-            o.close();
+            BufferedReader bufferedReaderInst =
+                new BufferedReader(new InputStreamReader(storage.open(
+                    getNamespace(), getEntity())));
+            String configInString = bufferedReaderInst.readLine();
+            setConfiguration(getPrimitiveSerde().deserialize(configInString));
+            bufferedReaderInst.close();
         } catch (IOException e) {
-            throw new StorageException(e.getMessage());
-        } catch (ClassNotFoundException e) {
             throw new StorageException(e.getMessage());
         }
 
@@ -150,5 +154,7 @@ public abstract class Primitive<T extends Primitive , V extends Configuration> i
         storage.delete(getNamespace(), getEntity());
         setConfiguration(null);
     }
+
+    public abstract PrimitiveSerDe<V> getPrimitiveSerde();
 
 }

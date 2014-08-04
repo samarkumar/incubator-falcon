@@ -18,25 +18,25 @@
 
 package org.apache.falcon.designer.primitive;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-
+import org.apache.falcon.designer.action.serde.PrimitiveSerDe;
 import org.apache.falcon.designer.configuration.FlowConfig;
 import org.apache.falcon.designer.flow.serde.FlowSerde;
-import org.apache.falcon.designer.storage.Storage;
-import org.apache.falcon.designer.storage.StorageException;
+
 /**
  * Concrete implementation for a Flow.
  */
 public class Flow extends Primitive<Flow, FlowConfig> {
 
     private FlowConfig process;
+    private String nameSpace;
+    private String entity;
+    private FlowSerde flowSerdeInst;
 
-    public Flow(FlowConfig process) {
+    public Flow(FlowConfig process, String nameSpace, String entity) {
         this.process = process;
+        this.nameSpace = nameSpace;
+        this.entity = entity;
+        this.flowSerdeInst = new FlowSerde();
     }
 
     @Override
@@ -65,52 +65,14 @@ public class Flow extends Primitive<Flow, FlowConfig> {
 
     @Override
     public String getNamespace() {
-        // TODO Auto-generated method stub
-        return null;
+        return nameSpace;
     }
 
     @Override
     public String getEntity() {
-        // TODO Auto-generated method stub
-        return null;
+        return entity;
     }
 
-    @Override
-    public void store(Storage storage) throws StorageException {
-        // what is this entity and namespaces
-        try {
-            BufferedWriter o =
-                new BufferedWriter(new OutputStreamWriter(storage.create(
-                    getNamespace(), getEntity())));
-            String serializedResource = FlowSerde.serialize(getConfiguration());
-            o.write(serializedResource);
-            o.close();
-        } catch (IOException e) {
-            throw new StorageException(e.getMessage());
-        }
-
-    }
-
-    @Override
-    public void restore(Storage storage) throws StorageException {
-        try {
-            BufferedReader o =
-                new BufferedReader(new InputStreamReader(storage.open(
-                    getNamespace(), getEntity())));
-            String configInString = o.readLine();
-            setConfiguration(FlowSerde.deserialize(configInString));
-            o.close();
-        } catch (IOException e) {
-            throw new StorageException(e.getMessage());
-        }
-
-    }
-
-    @Override
-    public void delete(Storage storage) throws StorageException {
-        storage.delete(getNamespace(), getEntity());
-        setConfiguration(null);
-    }
 
     @Override
     public void setConfiguration(FlowConfig config) {
@@ -121,5 +83,11 @@ public class Flow extends Primitive<Flow, FlowConfig> {
     public FlowConfig getConfiguration() {
         return process;
     }
+
+    @Override
+    public PrimitiveSerDe<FlowConfig> getPrimitiveSerde() {
+        return flowSerdeInst;
+    }
+
 
 }

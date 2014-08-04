@@ -23,20 +23,7 @@ import org.apache.falcon.designer.configuration.ActionConfiguration;
  * interface defining contract for all ActionSerDes.
  * @param <T>
  */
-public interface ActionSerDe<T extends ActionConfiguration> {
-
-    /**
-     * Serialize it from a action type to string type.
-     * @param act actual Action Configuration data
-     * @return
-     */
-    String serialize(T act);
-
-    /**
-     * Deserialize from string to object of Action type.
-     * @param actString actual Data
-     * @return
-     */
-    T deserialize(String actString);
+public interface ActionSerDe<T extends ActionConfiguration> extends
+    PrimitiveSerDe<ActionConfiguration> {
 
 }

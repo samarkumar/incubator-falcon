@@ -18,6 +18,7 @@
 package org.apache.falcon.designer.primitive.action;
 
 import org.apache.falcon.designer.action.configuration.EmailActionConfiguration;
+import org.apache.falcon.designer.action.serde.impl.EmailActionSerde;
 import org.apache.falcon.designer.primitive.Action;
 import org.apache.falcon.designer.primitive.Code;
 import org.apache.falcon.designer.primitive.Message;
@@ -26,16 +27,18 @@ import org.apache.falcon.designer.primitive.Message;
  * EmailAction Primitive containing implementation to compile.
  */
 public class EmailAction extends Action<EmailAction, EmailActionConfiguration> {
-    // flow grouping .. show come from the flow
-    private static final String NAMESPACE = "EmailAction";
 
-    // flow name .. show come from the flow
-    private static final String ENTITY = "1232";
+    private String nameSpace;
+    private String entity;
+    private EmailActionSerde emailActionSerdeInst;
 
     private EmailActionConfiguration emailConfig;
 
-    public EmailAction(EmailActionConfiguration config) {
+    public EmailAction(EmailActionConfiguration config , String nameSpace, String entity) {
         this.emailConfig = config;
+        this.nameSpace = nameSpace;
+        this.entity = entity;
+        this.emailActionSerdeInst =  new EmailActionSerde();
     }
 
     @Override
@@ -81,12 +84,17 @@ public class EmailAction extends Action<EmailAction, EmailActionConfiguration> {
 
     @Override
     public String getNamespace() {
-        return NAMESPACE;
+        return nameSpace;
     }
 
     @Override
     public String getEntity() {
-        return ENTITY;
+        return entity;
+    }
+
+    @Override
+    public EmailActionSerde getPrimitiveSerde() {
+        return emailActionSerdeInst;
     }
 
 }

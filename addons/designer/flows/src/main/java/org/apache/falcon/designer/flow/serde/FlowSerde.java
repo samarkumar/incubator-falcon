@@ -18,23 +18,20 @@
 
 package org.apache.falcon.designer.flow.serde;
 
+import org.apache.falcon.designer.action.serde.PrimitiveSerDe;
 import org.apache.falcon.designer.configuration.FlowConfig;
 
 /**
  * Will serialzie a flow from from a FlowConfig object and vice versa.
  */
-public final class FlowSerde {
+public final class FlowSerde implements PrimitiveSerDe<FlowConfig> {
 
-    private FlowSerde() {
-
-    }
-
-    public static String serialize(FlowConfig act) {
+    public String serialize(FlowConfig act) {
         throw new RuntimeException("Feature not implemented");
 
     }
 
-    public static FlowConfig deserialize(final String actString) {
+    public FlowConfig deserialize(final String actString) {
         throw new RuntimeException("Feature not implemented");
     }
 }

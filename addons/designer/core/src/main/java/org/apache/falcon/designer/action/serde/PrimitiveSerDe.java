@@ -15,26 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.falcon.designer.action.serde;
 
-import org.apache.falcon.designer.action.serde.impl.EmailActionSerde;
-import org.apache.falcon.designer.type.ActionTypes;
+import org.apache.falcon.designer.configuration.Configuration;
+
+
 /**
- * Factory class for all the ActionSerDe.
+ * interface defining contract for all ActionSerDes.
+ * @param <T>
  */
-public class ActionSerDeFactory {
+public interface PrimitiveSerDe<T extends Configuration> {
 
-    public PrimitiveSerDe getActionSerde(ActionTypes actionType) {
+    /**
+     * Serialize it from a action type to string type.
+     * @param act actual Action Configuration data
+     * @return
+     */
+    String serialize(T act);
 
-        switch (actionType) {
-        case EMAIL:
-            return new EmailActionSerde();
-        default:
-            return null;
-
-        }
-
-    }
+    /**
+     * Deserialize from string to object of Action type.
+     * @param actString actual Data
+     * @return
+     */
+    T deserialize(String actString);
 
 }

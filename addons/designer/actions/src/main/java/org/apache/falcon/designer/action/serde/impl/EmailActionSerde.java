@@ -20,7 +20,7 @@ package org.apache.falcon.designer.action.serde.impl;
 import java.io.IOException;
 
 import org.apache.falcon.designer.action.configuration.EmailActionConfiguration;
-import org.apache.falcon.designer.action.serde.ActionSerDe;
+import org.apache.falcon.designer.action.serde.PrimitiveSerDe;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -28,7 +28,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 /**
  *Method to Serialize and Deserialze an Email Action Configuration object.
  */
-public class EmailActionSerde implements ActionSerDe<EmailActionConfiguration> {
+public class EmailActionSerde implements PrimitiveSerDe<EmailActionConfiguration> {
 
     private ObjectMapper mapper = new ObjectMapper();
 
