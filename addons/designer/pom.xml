@@ -102,6 +102,8 @@
         <jetty.version>6.1.26</jetty.version>
         <internal.maven.repo>file:///tmp/falcontemprepo</internal.maven.repo>
         <skipCheck>false</skipCheck>
+        <designer.version>0.6-incubating-SNAPSHOT</designer.version>
+        <hadoop.version>2.2.0</hadoop.version>
     </properties>
 
     <modules>
@@ -369,11 +371,40 @@
                 <version>${hcatalog.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>net.sourceforge.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-                <version>1.3.2</version>
-            </dependency>
+			<dependency>
+				<groupId>net.sourceforge.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>1.3.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.falcon.designer</groupId>
+				<artifactId>designer-core</artifactId>
+				<version>${designer.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.hadoop</groupId>
+				<artifactId>hadoop-common</artifactId>
+				<version>${hadoop.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.hadoop</groupId>
+				<artifactId>hadoop-hdfs</artifactId>
+				<version>${hadoop.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.hadoop</groupId>
+				<artifactId>hadoop-hdfs</artifactId>
+				<version>${hadoop.version}</version>
+				<scope>test</scope>
+				<classifier>tests</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.hadoop</groupId>
+				<artifactId>hadoop-common</artifactId>
+				<version>${hadoop.version}</version>
+				<scope>test</scope>
+				<classifier>tests</classifier>
+			</dependency>
         </dependencies>
     </dependencyManagement>
 

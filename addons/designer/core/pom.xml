@@ -32,10 +32,6 @@
     <name>Apache Falcon Designer Core</name>
     <packaging>jar</packaging>
     
-    <properties>
-        <hadoop.version>2.2.0</hadoop.version>
-    </properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.falcon</groupId>
@@ -56,33 +52,28 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-common</artifactId>
-			<version>${hadoop.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-hdfs</artifactId>
-			<version>${hadoop.version}</version>
-		</dependency>
 		 <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
         </dependency>
+        <dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-hdfs</artifactId>
+		</dependency>
          <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-hdfs</artifactId>
             <scope>test</scope>
-            <version>${hadoop.version}</version>
             <classifier>tests</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
             <scope>test</scope>
-            <version>${hadoop.version}</version>
             <classifier>tests</classifier>
         </dependency>
 	</dependencies>
