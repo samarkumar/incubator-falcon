@@ -25,18 +25,6 @@
     <display-name>Apache Falcon Pipeline Designer</display-name>
     <description>Apache Falcon Pipeline Designer</description>
 
-
-	<!-- Servlets -->
-	<servlet>
-		<servlet-name>backEndServlet</servlet-name>
-		<servlet-class>org.apache.falcon.designer.ui.client.server.impl.BackEndServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>backEndServlet</servlet-name>
-		<url-pattern>/falcondesignerui/backEnd</url-pattern>
-	</servlet-mapping>
-<!-- 
     <servlet>
         <servlet-name>pipelineApi</servlet-name>
         <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -57,7 +45,5 @@
         <servlet-name>pipelineApi</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
- -->
- 
 
 </web-app>

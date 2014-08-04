@@ -32,7 +32,6 @@
     <name>Apache Falcon Designer Flows</name>
     <packaging>jar</packaging>
 
-
     <dependencies>
         <dependency>
             <groupId>org.testng</groupId>
@@ -43,6 +42,5 @@
 			<artifactId>designer-core</artifactId>
 		</dependency>
     </dependencies>
-    
 
 </project>

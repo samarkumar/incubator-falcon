@@ -19,14 +19,14 @@
 package org.apache.falcon.designer.configuration;
 
 /**
- * Flow data.
+ * Flow data. More parameters would need to be added.
  */
 public class FlowConfig implements Configuration {
 
     private String namespace;
     private String entity;
     private String name;
-    private static final String CATEGORY = "TRANSFORM";
+    private static final String CATEGORY = "FLOW";
 
     public FlowConfig(String namespace, String entity, String name) {
         this.namespace = namespace;

@@ -27,7 +27,6 @@ public abstract class TransformConfiguration implements Configuration {
 
     @Override
     public String getCategory() {
-        // TODO Auto-generated method stub
         return CATEGORY;
     }
 

@@ -47,7 +47,7 @@ public class HDFSStorageTest {
     }
 
     @Test
-    public void testCreate() {
+    public void testCreateOpenDelete() {
         try {
             final String testNameSpace = "testNS";
             final String testEntity = "testEntity";

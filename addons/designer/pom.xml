@@ -114,7 +114,6 @@
         <module>flows</module>
         <module>transforms</module>
         <module>actions</module>
-        <module>rest</module>
     </modules>
 
     <repositories>

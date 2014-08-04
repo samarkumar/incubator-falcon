@@ -18,13 +18,11 @@
 
 package org.apache.falcon.designer.configuration;
 
-import java.io.Serializable;
-
 /**
  * This is the configuration that primitives will use
  * to configure their instance.
  */
-public interface Configuration extends Serializable{
+public interface Configuration{
 
     String getName();
 
