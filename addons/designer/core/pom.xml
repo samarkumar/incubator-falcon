@@ -31,7 +31,7 @@
     <description>Apache Falcon Pipeline Designer - Core Module</description>
     <name>Apache Falcon Designer Core</name>
     <packaging>jar</packaging>
-    
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.falcon</groupId>
