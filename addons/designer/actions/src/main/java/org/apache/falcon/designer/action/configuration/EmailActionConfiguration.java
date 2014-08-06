@@ -23,35 +23,35 @@ import org.apache.falcon.designer.configuration.ActionConfiguration;
  */
 public class EmailActionConfiguration extends ActionConfiguration {
 
-    private String toEmails;
-    private String ccEmails;
-    private String subjects;
+    private String to;
+    private String cc;
+    private String subject;
     private String body;
 
     private static final String NAME = "Email";
 
-    public String getToEmails() {
-        return toEmails;
+    public String getTo() {
+        return to;
     }
 
-    public void setToEmails(String toEmails) {
-        this.toEmails = toEmails;
+    public void setTo(String to) {
+        this.to = to;
     }
 
-    public String getCcEmails() {
-        return ccEmails;
+    public String getCc() {
+        return cc;
     }
 
-    public void setCcEmails(String ccEmails) {
-        this.ccEmails = ccEmails;
+    public void setCc(String cc) {
+        this.cc = cc;
     }
 
-    public String getSubjects() {
-        return subjects;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setSubjects(String subjects) {
-        this.subjects = subjects;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public String getBody() {
