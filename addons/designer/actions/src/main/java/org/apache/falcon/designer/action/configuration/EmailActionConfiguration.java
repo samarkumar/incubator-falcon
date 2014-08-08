@@ -21,7 +21,7 @@ import org.apache.falcon.designer.configuration.ActionConfiguration;
 /**
  * Action object holding Email data.
  */
-public class EmailActionConfiguration extends ActionConfiguration {
+public class EmailActionConfiguration extends ActionConfiguration<EmailActionConfiguration> {
 
     private String to;
     private String cc;
@@ -65,5 +65,10 @@ public class EmailActionConfiguration extends ActionConfiguration {
     @Override
     public String getName() {
         return NAME;
+    }
+
+    @Override
+    public Class<EmailActionConfiguration> getConfigClass() {
+        return EmailActionConfiguration.class;
     }
 }

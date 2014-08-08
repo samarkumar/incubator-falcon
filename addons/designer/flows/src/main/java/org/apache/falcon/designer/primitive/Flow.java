@@ -18,9 +18,7 @@
 
 package org.apache.falcon.designer.primitive;
 
-import org.apache.falcon.designer.action.serde.PrimitiveSerDe;
 import org.apache.falcon.designer.configuration.FlowConfig;
-import org.apache.falcon.designer.flow.serde.FlowSerde;
 
 /**
  * Concrete implementation for a Flow.
@@ -30,13 +28,11 @@ public class Flow extends Primitive<Flow, FlowConfig> {
     private FlowConfig process;
     private String nameSpace;
     private String entity;
-    private FlowSerde flowSerdeInst;
 
     public Flow(FlowConfig process, String nameSpace, String entity) {
         this.process = process;
         this.nameSpace = nameSpace;
         this.entity = entity;
-        this.flowSerdeInst = new FlowSerde();
     }
 
     @Override
@@ -83,11 +79,5 @@ public class Flow extends Primitive<Flow, FlowConfig> {
     public FlowConfig getConfiguration() {
         return process;
     }
-
-    @Override
-    public PrimitiveSerDe<FlowConfig> getPrimitiveSerde() {
-        return flowSerdeInst;
-    }
-
 
 }

@@ -20,7 +20,7 @@ package org.apache.falcon.designer.configuration;
 /**
  * Abstract ActionConfiguration extending Configuration.
  */
-public abstract class ActionConfiguration implements Configuration {
+public abstract class ActionConfiguration<A extends ActionConfiguration> extends Configuration<A> {
 
     private static final String CATEGORY = "ACTION";
 

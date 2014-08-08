@@ -20,7 +20,7 @@ package org.apache.falcon.designer.configuration;
 /**
  * Concrete implementation of Transform Configuration.
  */
-public abstract class TransformConfiguration implements Configuration {
+public abstract class TransformConfiguration<A extends TransformConfiguration> extends Configuration<A> {
 
 
     private static final String CATEGORY = "TRANSFORM";

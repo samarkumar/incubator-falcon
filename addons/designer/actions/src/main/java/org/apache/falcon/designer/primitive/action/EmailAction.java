@@ -18,7 +18,6 @@
 package org.apache.falcon.designer.primitive.action;
 
 import org.apache.falcon.designer.action.configuration.EmailActionConfiguration;
-import org.apache.falcon.designer.action.serde.impl.EmailActionSerde;
 import org.apache.falcon.designer.primitive.Action;
 import org.apache.falcon.designer.primitive.Code;
 import org.apache.falcon.designer.primitive.Message;
@@ -30,7 +29,6 @@ public class EmailAction extends Action<EmailAction, EmailActionConfiguration> {
 
     private String nameSpace;
     private String entity;
-    private EmailActionSerde emailActionSerdeInst;
 
     private EmailActionConfiguration emailConfig;
 
@@ -38,7 +36,6 @@ public class EmailAction extends Action<EmailAction, EmailActionConfiguration> {
         this.emailConfig = config;
         this.nameSpace = nameSpace;
         this.entity = entity;
-        this.emailActionSerdeInst =  new EmailActionSerde();
     }
 
     @Override
@@ -90,11 +87,6 @@ public class EmailAction extends Action<EmailAction, EmailActionConfiguration> {
     @Override
     public String getEntity() {
         return entity;
-    }
-
-    @Override
-    public EmailActionSerde getPrimitiveSerde() {
-        return emailActionSerdeInst;
     }
 
 }

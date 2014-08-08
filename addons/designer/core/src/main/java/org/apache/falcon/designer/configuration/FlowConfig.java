@@ -21,7 +21,7 @@ package org.apache.falcon.designer.configuration;
 /**
  * Flow data. More parameters would need to be added.
  */
-public class FlowConfig implements Configuration {
+public class FlowConfig extends Configuration<FlowConfig> {
 
     private String namespace;
     private String entity;
@@ -59,6 +59,11 @@ public class FlowConfig implements Configuration {
 
     public void setEntity(String entity) {
         this.entity = entity;
+    }
+
+    @Override
+    public Class<FlowConfig> getConfigClass() {
+        return FlowConfig.class;
     }
 
 }

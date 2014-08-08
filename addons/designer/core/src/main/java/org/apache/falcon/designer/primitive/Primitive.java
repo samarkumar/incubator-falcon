@@ -23,13 +23,11 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-
-import org.apache.falcon.designer.action.serde.PrimitiveSerDe;
 import org.apache.falcon.designer.configuration.Configuration;
+import org.apache.falcon.designer.configuration.SerdeException;
 import org.apache.falcon.designer.storage.Storage;
 import org.apache.falcon.designer.storage.StorageException;
 import org.apache.falcon.designer.storage.Storeable;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -124,10 +122,12 @@ public abstract class Primitive<T extends Primitive, V extends Configuration>
                 new BufferedWriter(new OutputStreamWriter(storage.create(
                     getNamespace(), getEntity())));
             String serializedResource =
-                getPrimitiveSerde().serialize(getConfiguration());
+                getConfiguration().serialize();
             bufferedWriterInst.write(serializedResource);
             bufferedWriterInst.close();
         } catch (IOException e) {
+            throw new StorageException(e.getMessage());
+        } catch (SerdeException e) {
             throw new StorageException(e.getMessage());
         }
 
@@ -140,9 +140,11 @@ public abstract class Primitive<T extends Primitive, V extends Configuration>
                 new BufferedReader(new InputStreamReader(storage.open(
                     getNamespace(), getEntity())));
             String configInString = bufferedReaderInst.readLine();
-            setConfiguration(getPrimitiveSerde().deserialize(configInString));
+            setConfiguration((V)getConfiguration().deserialize(configInString));
             bufferedReaderInst.close();
         } catch (IOException e) {
+            throw new StorageException(e.getMessage());
+        } catch (SerdeException e) {
             throw new StorageException(e.getMessage());
         }
 
@@ -153,7 +155,5 @@ public abstract class Primitive<T extends Primitive, V extends Configuration>
         storage.delete(getNamespace(), getEntity());
         setConfiguration(null);
     }
-
-    public abstract PrimitiveSerDe<V> getPrimitiveSerde();
 
 }

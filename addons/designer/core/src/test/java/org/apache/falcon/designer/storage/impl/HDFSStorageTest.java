@@ -24,7 +24,6 @@ import java.io.OutputStream;
 
 import org.apache.falcon.designer.storage.StorageException;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -33,15 +32,13 @@ import org.testng.annotations.Test;
  * Will test HDFSStorage for create open remove.
  */
 public class HDFSStorageTest {
-    private MiniDFSCluster cluster;
     private HDFSStorage hdfsStorageInst;
 
     @BeforeClass
     public void setUpDFS() throws Exception {
         Configuration conf = new Configuration();
         conf.set("falcon.designer.hdfsstorage.defaultpath", "/tmp/");
-        cluster = new MiniDFSCluster.Builder(conf).numDataNodes(2).build();
-        cluster.waitActive();
+        conf.set("fs.default.name", "file:///");
         hdfsStorageInst = new HDFSStorage(conf);
 
     }
@@ -64,6 +61,8 @@ public class HDFSStorageTest {
             hdfsStorageInst.delete(testNameSpace, testEntity);
             try {
                 hdfsStorageInst.open(testNameSpace, testEntity);
+                Assert
+                    .fail("file should be present and should have thrown an exception");
             } catch (StorageException ex) {
                 Assert.assertEquals(ex.getCause().getClass(),
                         FileNotFoundException.class);
