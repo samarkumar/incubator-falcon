@@ -32,15 +32,15 @@
     <name>Apache Falcon Designer Action</name>
     <packaging>jar</packaging>
 
-    <dependencies>
-	<dependency>
-		<groupId>org.testng</groupId>
-		<artifactId>testng</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>org.apache.falcon.designer</groupId>
-		<artifactId>designer-core</artifactId>
-	</dependency>
-</dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.falcon.designer</groupId>
+			<artifactId>designer-core</artifactId>
+		</dependency>
+	</dependencies>
 
 </project>
