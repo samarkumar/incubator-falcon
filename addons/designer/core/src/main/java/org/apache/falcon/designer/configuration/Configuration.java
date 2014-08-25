@@ -20,6 +20,9 @@ package org.apache.falcon.designer.configuration;
 import java.io.IOException;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -27,6 +30,8 @@ import org.codehaus.jackson.map.ObjectMapper;
  * This is the configuration that primitives will use to configure their
  * instance.
  */
+@JsonAutoDetect(fieldVisibility = Visibility.ANY,
+    getterVisibility = Visibility.ANY, setterVisibility = Visibility.NONE)
 public abstract class Configuration<T extends Configuration> {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -77,5 +82,5 @@ public abstract class Configuration<T extends Configuration> {
         return returnEmailAction;
     }
 
-    public abstract Class<T> getConfigClass();
+    @JsonIgnore public abstract Class<T> getConfigClass();
 }

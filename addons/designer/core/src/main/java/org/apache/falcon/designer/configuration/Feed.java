@@ -17,23 +17,21 @@
  */
 package org.apache.falcon.designer.configuration;
 
-import java.util.HashSet;
-import java.util.Set;
 /**
- * Concrete implementation of Transform Configuration.
+ * Represents a falcon feed.
+ *
  */
-public abstract class TransformConfiguration<A extends TransformConfiguration> extends Configuration<A> {
+public class Feed extends Configuration<Feed> {
 
-
-    private static final String CATEGORY = "TRANSFORM";
-    private String nextTransformation;
-    private Set<Feed> inputFeed;
-    private String producedFeed;
     private String name;
 
-    public TransformConfiguration(String name) {
+    // Schema type should be thought over
+    private String schema;
+
+    private static final String CATEGORY = "FEED";
+
+    public Feed(String name) {
         this.name = name;
-        this.inputFeed = new HashSet<Feed>();
     }
 
     @Override
@@ -41,32 +39,21 @@ public abstract class TransformConfiguration<A extends TransformConfiguration> e
         return CATEGORY;
     }
 
-    public String getNextTransformation() {
-        return nextTransformation;
-    }
-
-    public void setNextTransformation(String nextTransformation) {
-        this.nextTransformation = nextTransformation;
-    }
-
-    public String getProducedFeed() {
-        return producedFeed;
-    }
-
-    public void setProducedFeed(String producedFeed) {
-        this.producedFeed = producedFeed;
+    @Override
+    public Class<Feed> getConfigClass() {
+        return Feed.class;
     }
 
     @Override
     public String getName() {
-        return this.name;
+        return name;
     }
 
-    public Set<Feed> getInputFeed() {
-        return inputFeed;
+    public String getSchema() {
+        return schema;
     }
 
-    public void setInputFeed(Set<Feed> inputFeed) {
-        this.inputFeed = inputFeed;
+    public void setSchema(String schema) {
+        this.schema = schema;
     }
 }

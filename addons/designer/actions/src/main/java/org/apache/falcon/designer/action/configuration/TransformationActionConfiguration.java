@@ -17,52 +17,23 @@
  */
 package org.apache.falcon.designer.action.configuration;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.falcon.designer.configuration.ActionConfiguration;
+import org.apache.falcon.designer.configuration.TransformConfiguration;
+
 /**
- * Action object holding Email data.
+ * Action holding a DAG of transformation. It represents a pig action.
+ *
  */
-public class EmailActionConfiguration extends ActionConfiguration<EmailActionConfiguration> {
-
-    private String to;
-    private String cc;
-    private String subject;
-    private String body;
+public class TransformationActionConfiguration extends
+    ActionConfiguration<TransformationActionConfiguration> {
     private String name;
+    private List<TransformConfiguration> tranformationList;
 
-    public EmailActionConfiguration(String name) {
+    public TransformationActionConfiguration(String name) {
+        tranformationList = new ArrayList<TransformConfiguration>();
         this.name = name;
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public void setTo(String to) {
-        this.to = to;
-    }
-
-    public String getCc() {
-        return cc;
-    }
-
-    public void setCc(String cc) {
-        this.cc = cc;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
     }
 
     @Override
@@ -71,11 +42,16 @@ public class EmailActionConfiguration extends ActionConfiguration<EmailActionCon
     }
 
     @Override
-    public Class<EmailActionConfiguration> getConfigClass() {
-        return EmailActionConfiguration.class;
+    public Class<TransformationActionConfiguration> getConfigClass() {
+        return TransformationActionConfiguration.class;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public List<TransformConfiguration> getTranformationList() {
+        return tranformationList;
+    }
+
+    public void setTranformationList(
+        List<TransformConfiguration> tranformationList) {
+        this.tranformationList = tranformationList;
     }
 }

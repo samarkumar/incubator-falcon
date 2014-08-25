@@ -39,7 +39,7 @@ public class HDFSStorage implements Storage {
     private static final String BASEPATH_CONFIG_NAME =
         "falcon.designer.hdfsstorage.defaultpath";
 
-    HDFSStorage(Configuration conf) throws StorageException {
+    public HDFSStorage(Configuration conf) throws StorageException {
         try {
             this.fs = FileSystem.get(conf);
         } catch (IOException e) {

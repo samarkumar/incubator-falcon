@@ -18,6 +18,9 @@
 
 package org.apache.falcon.designer.configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Flow data. More parameters would need to be added.
  */
@@ -28,10 +31,16 @@ public class FlowConfig extends Configuration<FlowConfig> {
     private String name;
     private static final String CATEGORY = "FLOW";
 
+    private List<ActionConfiguration> actionsNodes;
+
+    public FlowConfig() {
+    }
+
     public FlowConfig(String namespace, String entity, String name) {
         this.namespace = namespace;
         this.entity = entity;
         this.name = name;
+        this.actionsNodes = new ArrayList<ActionConfiguration>();
 
     }
 
@@ -64,6 +73,14 @@ public class FlowConfig extends Configuration<FlowConfig> {
     @Override
     public Class<FlowConfig> getConfigClass() {
         return FlowConfig.class;
+    }
+
+    public List<ActionConfiguration> getActionsNodes() {
+        return actionsNodes;
+    }
+
+    public void setActionsNodes(List<ActionConfiguration> actionsNodes) {
+        this.actionsNodes = actionsNodes;
     }
 
 }

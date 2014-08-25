@@ -15,35 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.falcon.designer.configuration;
 
-import java.util.HashMap;
-import java.util.Map;
+package org.apache.falcon.designer.transformation.configuration;
+
+import org.apache.falcon.designer.configuration.TransformConfiguration;
 
 /**
- * Abstract ActionConfiguration extending Configuration.
+ * PlaceHolder to implementation for a filter transformation.
  */
-public abstract class ActionConfiguration<A extends ActionConfiguration> extends Configuration<A> {
-
-    private static final String CATEGORY = "ACTION";
-
-    private Map<String, String> nextActionMap = new HashMap<String, String>();
-
+public class FilterTransformation extends
+    TransformConfiguration<FilterTransformation> {
+    
+    public FilterTransformation(String name) {
+        super(name);
+    }
+    
     @Override
-    public String getCategory() {
-        return CATEGORY;
+    public Class<FilterTransformation> getConfigClass() {
+        
+        return FilterTransformation.class;
     }
-
-    public Map<String, String> getNextActionMap() {
-        return nextActionMap;
-    }
-
-    public void setNextActionMap(Map<String, String> nextActionMap) {
-        this.nextActionMap = nextActionMap;
-    }
-
-    public void addNextAction(String condition, String nextAction) {
-        this.nextActionMap.put(condition, nextAction);
-    }
-
+    
 }
