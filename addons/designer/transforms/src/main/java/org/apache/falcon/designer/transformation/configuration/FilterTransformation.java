@@ -18,7 +18,7 @@
 
 package org.apache.falcon.designer.transformation.configuration;
 
-import org.apache.falcon.designer.configuration.TransformConfiguration;
+import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 
 /**
  * PlaceHolder to implementation for a filter transformation.

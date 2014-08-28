@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.primitive;
+package org.apache.falcon.designer.core.primitive;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.apache.falcon.designer.configuration.ActionConfiguration;
+import org.apache.falcon.designer.core.configuration.ActionConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

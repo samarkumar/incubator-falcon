@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.primitive;
+package org.apache.falcon.designer.core.primitive;
 
 /**
  * For now a simple marker interface for holding source code

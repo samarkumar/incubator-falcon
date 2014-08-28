@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.primitive;
+package org.apache.falcon.designer.core.primitive;
 
-import org.apache.falcon.designer.configuration.TransformConfiguration;
+import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 import org.apache.falcon.designer.schema.RelationalData;
 
 import javax.annotation.Nonnull;

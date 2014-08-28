@@ -18,9 +18,9 @@
 package org.apache.falcon.designer.primitive.action;
 
 import org.apache.falcon.designer.action.configuration.EmailActionConfiguration;
-import org.apache.falcon.designer.primitive.Action;
-import org.apache.falcon.designer.primitive.Code;
-import org.apache.falcon.designer.primitive.Message;
+import org.apache.falcon.designer.core.primitive.Action;
+import org.apache.falcon.designer.core.primitive.Code;
+import org.apache.falcon.designer.core.primitive.Message;
 
 /**
  * EmailAction Primitive containing implementation to compile.

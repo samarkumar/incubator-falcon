@@ -15,9 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.falcon.designer.configuration;
+package org.apache.falcon.designer.core.configuration;
 
 import java.io.IOException;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
@@ -30,7 +31,7 @@ import org.codehaus.jackson.map.ObjectMapper;
  * This is the configuration that primitives will use to configure their
  * instance.
  */
-@JsonAutoDetect(fieldVisibility = Visibility.ANY,
+@JsonAutoDetect(fieldVisibility =  Visibility.NONE,
     getterVisibility = Visibility.ANY, setterVisibility = Visibility.NONE)
 public abstract class Configuration<T extends Configuration> {
     private static final ObjectMapper MAPPER = new ObjectMapper();

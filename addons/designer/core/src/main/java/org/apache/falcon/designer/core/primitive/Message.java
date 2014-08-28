@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.primitive;
+package org.apache.falcon.designer.core.primitive;
 
 /**
  * Messages are pieces of information that may be surfaced to the caller

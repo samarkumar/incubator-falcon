@@ -16,27 +16,18 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.primitive;
+package org.apache.falcon.designer.core.primitive;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import org.apache.falcon.designer.configuration.Configuration;
-import org.apache.falcon.designer.configuration.SerdeException;
-import org.apache.falcon.designer.storage.Storage;
-import org.apache.falcon.designer.storage.StorageException;
-import org.apache.falcon.designer.storage.Storeable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.apache.falcon.designer.core.configuration.Configuration;
 
 /**
  * All elements of the pipeline are essentially a primitive. These primitives
  * only have life during the pipeline design time.
  */
-public abstract class Primitive<T extends Primitive, V extends Configuration>
-    implements Storeable {
+public abstract class Primitive<T extends Primitive, V extends Configuration>{
 
     public abstract void setConfiguration(V config);
 
@@ -113,47 +104,5 @@ public abstract class Primitive<T extends Primitive, V extends Configuration>
     public abstract String getNamespace();
 
     public abstract String getEntity();
-
-    @Override
-    public void store(Storage storage) throws StorageException {
-        try {
-
-            BufferedWriter bufferedWriterInst =
-                new BufferedWriter(new OutputStreamWriter(storage.create(
-                    getNamespace(), getEntity())));
-            String serializedResource =
-                getConfiguration().serialize();
-            bufferedWriterInst.write(serializedResource);
-            bufferedWriterInst.close();
-        } catch (IOException e) {
-            throw new StorageException(e.getMessage());
-        } catch (SerdeException e) {
-            throw new StorageException(e.getMessage());
-        }
-
-    }
-
-    @Override
-    public void restore(Storage storage) throws StorageException {
-        try {
-            BufferedReader bufferedReaderInst =
-                new BufferedReader(new InputStreamReader(storage.open(
-                    getNamespace(), getEntity())));
-            String configInString = bufferedReaderInst.readLine();
-            setConfiguration((V)getConfiguration().deserialize(configInString));
-            bufferedReaderInst.close();
-        } catch (IOException e) {
-            throw new StorageException(e.getMessage());
-        } catch (SerdeException e) {
-            throw new StorageException(e.getMessage());
-        }
-
-    }
-
-    @Override
-    public void delete(Storage storage) throws StorageException {
-        storage.delete(getNamespace(), getEntity());
-        setConfiguration(null);
-    }
 
 }

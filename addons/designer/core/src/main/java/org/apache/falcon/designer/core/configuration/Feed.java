@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.falcon.designer.configuration;
+package org.apache.falcon.designer.core.configuration;
 
 /**
  * Represents a falcon feed.

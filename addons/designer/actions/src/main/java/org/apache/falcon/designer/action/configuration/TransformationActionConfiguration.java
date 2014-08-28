@@ -17,22 +17,27 @@
  */
 package org.apache.falcon.designer.action.configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.falcon.designer.configuration.ActionConfiguration;
-import org.apache.falcon.designer.configuration.TransformConfiguration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.falcon.designer.core.configuration.ActionConfiguration;
+import org.apache.falcon.designer.core.configuration.TransformConfiguration;
+import org.apache.falcon.designer.primitive.builder.BuilderException;
 
 /**
  * Action holding a DAG of transformation. It represents a pig action.
- *
  */
 public class TransformationActionConfiguration extends
     ActionConfiguration<TransformationActionConfiguration> {
-    private String name;
-    private List<TransformConfiguration> tranformationList;
+    private final String name;
+    private final Set<TransformConfiguration> tranformationList;
+    private final Map<String, TransformConfiguration> cacheOfTransformations =
+        new HashMap<String, TransformConfiguration>();
 
     public TransformationActionConfiguration(String name) {
-        tranformationList = new ArrayList<TransformConfiguration>();
+        tranformationList = new HashSet<TransformConfiguration>();
         this.name = name;
     }
 
@@ -46,12 +51,32 @@ public class TransformationActionConfiguration extends
         return TransformationActionConfiguration.class;
     }
 
-    public List<TransformConfiguration> getTranformationList() {
+    public Set<TransformConfiguration> getTranformationList() {
         return tranformationList;
     }
 
     public void setTranformationList(
-        List<TransformConfiguration> tranformationList) {
-        this.tranformationList = tranformationList;
+        Set<TransformConfiguration> tranformationSet) throws BuilderException {
+        for (TransformConfiguration eachTrasformation : tranformationSet) {
+            addTransformation(eachTrasformation);
+        }
+    }
+
+    public void addTransformation(TransformConfiguration eachTrasformation) throws BuilderException {
+        TransformConfiguration transformationFromCache =
+            cacheOfTransformations.get(eachTrasformation.getName());
+        if (transformationFromCache == null) {
+            cacheOfTransformations.put(eachTrasformation.getName(),
+                eachTrasformation);
+            tranformationList.add(eachTrasformation);
+        } else {
+            throw new BuilderException("Tranformation already exists :"
+                + transformationFromCache.getName());
+        }
+
+    }
+
+    public TransformConfiguration readTransformation(String transformationName) {
+        return cacheOfTransformations.get(transformationName);
     }
 }

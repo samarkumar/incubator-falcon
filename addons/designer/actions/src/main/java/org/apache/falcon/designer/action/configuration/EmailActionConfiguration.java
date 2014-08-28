@@ -17,7 +17,7 @@
  */
 package org.apache.falcon.designer.action.configuration;
 
-import org.apache.falcon.designer.configuration.ActionConfiguration;
+import org.apache.falcon.designer.core.configuration.ActionConfiguration;
 /**
  * Action object holding Email data.
  */

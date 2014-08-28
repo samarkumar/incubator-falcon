@@ -16,10 +16,12 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.configuration;
+package org.apache.falcon.designer.core.configuration;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Flow data. More parameters would need to be added.
@@ -30,8 +32,8 @@ public class FlowConfig extends Configuration<FlowConfig> {
     private String entity;
     private String name;
     private static final String CATEGORY = "FLOW";
-
-    private List<ActionConfiguration> actionsNodes;
+    private Set<ActionConfiguration> actionsNodes;
+    private Map<String, ActionConfiguration> cacheOfActions;
 
     public FlowConfig() {
     }
@@ -40,8 +42,8 @@ public class FlowConfig extends Configuration<FlowConfig> {
         this.namespace = namespace;
         this.entity = entity;
         this.name = name;
-        this.actionsNodes = new ArrayList<ActionConfiguration>();
-
+        this.actionsNodes = new HashSet<ActionConfiguration>();
+        this.cacheOfActions = new HashMap<String, ActionConfiguration>();
     }
 
     @Override
@@ -75,12 +77,25 @@ public class FlowConfig extends Configuration<FlowConfig> {
         return FlowConfig.class;
     }
 
-    public List<ActionConfiguration> getActionsNodes() {
+    public Set<ActionConfiguration> getActionsNodes() {
         return actionsNodes;
     }
 
-    public void setActionsNodes(List<ActionConfiguration> actionsNodes) {
+    public void setActionsNodes(Set<ActionConfiguration> actionsNodes) {
+        for(ActionConfiguration actionConfig: actionsNodes){
+            this.cacheOfActions.put(actionConfig.getName(), actionConfig);
+        }
         this.actionsNodes = actionsNodes;
+    }
+
+    public ActionConfiguration findAction(String actionName){
+        return this.cacheOfActions.get(actionName);
+    }
+
+    public void addActions(ActionConfiguration actionsNode){
+        this.cacheOfActions.put(actionsNode.getName(), actionsNode);
+        this.actionsNodes.add(actionsNode);
+
     }
 
 }
