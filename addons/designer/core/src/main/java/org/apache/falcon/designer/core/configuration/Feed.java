@@ -56,4 +56,9 @@ public class Feed extends Configuration<Feed> {
     public void setSchema(String schema) {
         this.schema = schema;
     }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 }

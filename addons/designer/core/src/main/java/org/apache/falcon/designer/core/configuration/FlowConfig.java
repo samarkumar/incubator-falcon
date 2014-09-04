@@ -23,14 +23,24 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlRootElement;
+
+
 /**
  * Flow data. More parameters would need to be added.
  */
+@XmlRootElement(name = "flow")
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class FlowConfig extends Configuration<FlowConfig> {
 
     private String namespace;
     private String entity;
     private String name;
+    private Integer version;
     private static final String CATEGORY = "FLOW";
     private Set<ActionConfiguration> actionsNodes;
     private Map<String, ActionConfiguration> cacheOfActions;
@@ -77,6 +87,10 @@ public class FlowConfig extends Configuration<FlowConfig> {
         return FlowConfig.class;
     }
 
+    @XmlElements({
+        @XmlElement(name="emailAction"),
+        @XmlElement(name="transformationAction"),
+    })
     public Set<ActionConfiguration> getActionsNodes() {
         return actionsNodes;
     }
@@ -97,5 +111,18 @@ public class FlowConfig extends Configuration<FlowConfig> {
         this.actionsNodes.add(actionsNode);
 
     }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+public Integer getVersion() {
+    return version;
+}
+
+public void setVersion(Integer version) {
+    this.version = version;
+}
 
 }

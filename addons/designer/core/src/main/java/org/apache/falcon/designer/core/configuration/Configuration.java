@@ -19,6 +19,8 @@ package org.apache.falcon.designer.core.configuration;
 
 import java.io.IOException;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
@@ -32,11 +34,14 @@ import org.codehaus.jackson.map.ObjectMapper;
  * instance.
  */
 @JsonAutoDetect(fieldVisibility =  Visibility.NONE,
-    getterVisibility = Visibility.ANY, setterVisibility = Visibility.NONE)
+    getterVisibility = Visibility.ANY, setterVisibility = Visibility.ANY)
+@XmlRootElement
 public abstract class Configuration<T extends Configuration> {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public abstract String getName();
+
+    public abstract void setName(String name);
 
     public abstract String getCategory();
 

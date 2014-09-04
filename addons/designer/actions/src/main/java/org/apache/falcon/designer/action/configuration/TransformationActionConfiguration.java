@@ -22,6 +22,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.falcon.designer.core.configuration.ActionConfiguration;
 import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 import org.apache.falcon.designer.primitive.builder.BuilderException;
@@ -29,9 +33,11 @@ import org.apache.falcon.designer.primitive.builder.BuilderException;
 /**
  * Action holding a DAG of transformation. It represents a pig action.
  */
+@XmlRootElement(name = "transformationAction")
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class TransformationActionConfiguration extends
     ActionConfiguration<TransformationActionConfiguration> {
-    private final String name;
+    private String name;
     private final Set<TransformConfiguration> tranformationList;
     private final Map<String, TransformConfiguration> cacheOfTransformations =
         new HashMap<String, TransformConfiguration>();
@@ -78,5 +84,10 @@ public class TransformationActionConfiguration extends
 
     public TransformConfiguration readTransformation(String transformationName) {
         return cacheOfTransformations.get(transformationName);
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 }

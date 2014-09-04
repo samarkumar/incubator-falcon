@@ -110,9 +110,10 @@
         <module>ui</module>
         <module>common</module>
         <module>core</module>
-        <module>flows</module>
+        <module>server</module>
         <module>transforms</module>
         <module>actions</module>
+        <module>examples</module>
     </modules>
 
     <repositories>
@@ -229,6 +230,17 @@
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-xc</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-jaxrs</artifactId>
 			<version>1.5.2</version>
 		</dependency>
 
@@ -377,6 +389,21 @@
 		<dependency>
 			<groupId>org.apache.falcon.designer</groupId>
 			<artifactId>designer-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+            <groupId>org.apache.falcon.designer</groupId>
+            <artifactId>designer-action</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.falcon.designer</groupId>
+            <artifactId>designer-transform</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+			<groupId>org.apache.falcon.designer</groupId>
+			<artifactId>designer-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

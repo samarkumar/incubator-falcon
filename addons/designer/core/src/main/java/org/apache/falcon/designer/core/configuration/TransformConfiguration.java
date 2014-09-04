@@ -69,4 +69,9 @@ public abstract class TransformConfiguration<A extends TransformConfiguration> e
     public void setInputFeed(Set<Feed> inputFeed) {
         this.inputFeed = inputFeed;
     }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 }

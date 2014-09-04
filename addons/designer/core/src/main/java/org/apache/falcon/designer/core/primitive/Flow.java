@@ -39,6 +39,7 @@ public class Flow extends Primitive<Flow, FlowConfig> implements Storeable {
     private final String nameSpace;
     private final String entity;
 
+
     public Flow(FlowConfig process, String nameSpace, String entity) {
         this.process = process;
         this.nameSpace = nameSpace;

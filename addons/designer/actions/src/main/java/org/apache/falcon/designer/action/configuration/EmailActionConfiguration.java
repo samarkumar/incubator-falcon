@@ -17,10 +17,16 @@
  */
 package org.apache.falcon.designer.action.configuration;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.falcon.designer.core.configuration.ActionConfiguration;
 /**
  * Action object holding Email data.
  */
+@XmlRootElement(name = "emailAction")
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class EmailActionConfiguration extends ActionConfiguration<EmailActionConfiguration> {
 
     private String to;
@@ -75,6 +81,7 @@ public class EmailActionConfiguration extends ActionConfiguration<EmailActionCon
         return EmailActionConfiguration.class;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
