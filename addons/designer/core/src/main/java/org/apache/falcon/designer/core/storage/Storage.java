@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.storage;
+package org.apache.falcon.designer.core.storage;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;

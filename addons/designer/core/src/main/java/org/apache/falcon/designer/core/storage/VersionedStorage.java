@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.storage;
+package org.apache.falcon.designer.core.storage;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
@@ -102,7 +102,7 @@ public interface VersionedStorage  extends Storage {
      *
      * @param namespace - Namespace underwhich the entity is stored.
      * @param entity - Entity that is stored, for which versions are sought.
-     * @return - Iterable {@link org.apache.falcon.designer.storage.Version}
+     * @return - Iterable {@link org.apache.falcon.designer.core.storage.Version}
      * @throws StorageException - If entity version is missing or if there are issues while retrieving
      * the versions on the entity.
      */

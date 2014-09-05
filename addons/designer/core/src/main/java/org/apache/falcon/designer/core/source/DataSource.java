@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.source;
+package org.apache.falcon.designer.core.source;
 
 /**
  * Data source on where the data is located. Generally to indicate

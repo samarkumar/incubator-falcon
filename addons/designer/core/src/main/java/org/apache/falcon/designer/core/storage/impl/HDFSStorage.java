@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.falcon.designer.storage.impl;
+package org.apache.falcon.designer.core.storage.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.falcon.designer.storage.Storage;
-import org.apache.falcon.designer.storage.StorageException;
+import org.apache.falcon.designer.core.storage.Storage;
+import org.apache.falcon.designer.core.storage.StorageException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;

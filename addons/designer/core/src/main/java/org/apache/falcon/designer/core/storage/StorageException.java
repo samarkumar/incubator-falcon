@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.storage;
+package org.apache.falcon.designer.core.storage;
 
 /**
- * Checked Exception that the {@link org.apache.falcon.designer.storage.Storeable}
+ * Checked Exception that the {@link org.apache.falcon.designer.core.storage.Storeable}
  * throws when there is an issue with either storing or restoring contents
  * for an object from persistent storage.
  */

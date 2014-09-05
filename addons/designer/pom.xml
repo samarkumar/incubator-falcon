@@ -237,7 +237,6 @@
 			<artifactId>jackson-xc</artifactId>
 			<version>1.5.2</version>
 		</dependency>
-	
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-jaxrs</artifactId>
@@ -607,7 +606,6 @@
                     </execution>
                 </executions>
             </plugin>
-<!-- 
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
@@ -650,7 +648,6 @@
                     </execution>
                 </executions>
             </plugin>
- -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -672,7 +669,7 @@
                             <consoleOutput>true</consoleOutput>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <configLocation>falcon/checkstyle.xml</configLocation>
-                            <failOnViolation>false</failOnViolation>
+                            <failOnViolation>true</failOnViolation>
                             <skip>${skipCheck}</skip>
                         </configuration>
                     </execution>

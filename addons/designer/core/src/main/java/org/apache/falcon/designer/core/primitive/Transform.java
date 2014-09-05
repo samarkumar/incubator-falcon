@@ -19,7 +19,7 @@
 package org.apache.falcon.designer.core.primitive;
 
 import org.apache.falcon.designer.core.configuration.TransformConfiguration;
-import org.apache.falcon.designer.schema.RelationalData;
+import org.apache.falcon.designer.core.schema.RelationalData;
 
 import javax.annotation.Nonnull;
 

@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-package org.apache.falcon.designer.schema;
+package org.apache.falcon.designer.core.schema;
 
-import org.apache.falcon.designer.source.DataSource;
-import org.apache.falcon.designer.storage.Storage;
-import org.apache.falcon.designer.storage.StorageException;
-import org.apache.falcon.designer.storage.Storeable;
+import org.apache.falcon.designer.core.source.DataSource;
+import org.apache.falcon.designer.core.storage.Storage;
+import org.apache.falcon.designer.core.storage.StorageException;
+import org.apache.falcon.designer.core.storage.Storeable;
 
 import javax.annotation.Nonnull;
 

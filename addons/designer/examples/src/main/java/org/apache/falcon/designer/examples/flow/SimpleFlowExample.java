@@ -6,9 +6,9 @@ import org.apache.falcon.designer.action.primitive.builder.TransformationActionC
 import org.apache.falcon.designer.core.configuration.Feed;
 import org.apache.falcon.designer.core.configuration.FlowConfig;
 import org.apache.falcon.designer.core.configuration.SerdeException;
+import org.apache.falcon.designer.core.primitive.builder.BuilderException;
+import org.apache.falcon.designer.core.primitive.builder.FlowBuilder;
 import org.apache.falcon.designer.core.service.FalconDesigner;
-import org.apache.falcon.designer.primitive.builder.BuilderException;
-import org.apache.falcon.designer.primitive.builder.FlowBuilder;
 import org.apache.falcon.designer.server.service.client.DesignerFlowRestClient;
 import org.apache.falcon.designer.transformation.configuration.FilterTransformation;
 import org.apache.falcon.designer.transformation.configuration.JoinTransformation;

@@ -1,4 +1,4 @@
-package org.apache.falcon.designer.primitive.builder;
+package org.apache.falcon.designer.core.primitive.builder;
 
 /**
  * Exception thrown while building a primitive

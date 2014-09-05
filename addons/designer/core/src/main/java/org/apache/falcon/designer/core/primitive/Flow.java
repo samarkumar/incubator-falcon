@@ -26,9 +26,9 @@ import java.io.OutputStreamWriter;
 
 import org.apache.falcon.designer.core.configuration.FlowConfig;
 import org.apache.falcon.designer.core.configuration.SerdeException;
-import org.apache.falcon.designer.storage.Storage;
-import org.apache.falcon.designer.storage.StorageException;
-import org.apache.falcon.designer.storage.Storeable;
+import org.apache.falcon.designer.core.storage.Storage;
+import org.apache.falcon.designer.core.storage.StorageException;
+import org.apache.falcon.designer.core.storage.Storeable;
 
 /**
  * Concrete implementation for a Flow.

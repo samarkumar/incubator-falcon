@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.falcon.designer.core.configuration.ActionConfiguration;
 import org.apache.falcon.designer.core.configuration.TransformConfiguration;
-import org.apache.falcon.designer.primitive.builder.BuilderException;
+import org.apache.falcon.designer.core.primitive.builder.BuilderException;
 
 /**
  * Action holding a DAG of transformation. It represents a pig action.

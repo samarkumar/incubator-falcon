@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import org.apache.falcon.designer.action.configuration.TransformationActionConfiguration;
 import org.apache.falcon.designer.core.configuration.Feed;
 import org.apache.falcon.designer.core.configuration.TransformConfiguration;
-import org.apache.falcon.designer.primitive.builder.BuilderException;
+import org.apache.falcon.designer.core.primitive.builder.BuilderException;
 
 /**
  * Builder to build TransformationActionConfiguration.
