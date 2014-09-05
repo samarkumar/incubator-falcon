@@ -2,20 +2,16 @@ package org.apache.falcon.designer.examples.flow;
 
 import org.apache.falcon.designer.action.configuration.EmailActionConfiguration;
 import org.apache.falcon.designer.action.configuration.TransformationActionConfiguration;
+import org.apache.falcon.designer.action.primitive.builder.TransformationActionConfigurationBuilder;
 import org.apache.falcon.designer.core.configuration.Feed;
 import org.apache.falcon.designer.core.configuration.FlowConfig;
 import org.apache.falcon.designer.core.configuration.SerdeException;
-import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 import org.apache.falcon.designer.core.service.FalconDesigner;
-import org.apache.falcon.designer.primitive.action.builder.TransformationActionConfigurationBuilder;
 import org.apache.falcon.designer.primitive.builder.BuilderException;
 import org.apache.falcon.designer.primitive.builder.FlowBuilder;
 import org.apache.falcon.designer.server.service.client.DesignerFlowRestClient;
-import org.apache.falcon.designer.transformation.configuration.CoGroupTransformation;
 import org.apache.falcon.designer.transformation.configuration.FilterTransformation;
-import org.apache.falcon.designer.transformation.configuration.GroupByTransformation;
 import org.apache.falcon.designer.transformation.configuration.JoinTransformation;
-import org.apache.falcon.designer.transformation.configuration.ProjectionTransformation;
 
 public class SimpleFlowExample {
 
@@ -26,132 +22,15 @@ public class SimpleFlowExample {
             new DesignerFlowRestClient(localbaseURL);
         // use the builder to create a new flow;
         FlowConfig newFlowConfig = createAnotherFlow();
+        newFlowConfig = new FlowConfig();
         // create the flow using the client apis
-        // restClient.createFlow(newFlowConfig);
+        //FlowConfig createdFlow = restClient.createFlow(newFlowConfig, true);
+        //System.out.println("Created flow " + createdFlow);
         FlowConfig fl = restClient.getAFlow("anyFlow", 2);
         System.out.println("Final output " + fl.getCategory());
         System.out.println("Final output " + fl.serialize());
+
         // do somethin with the flow; :)
-
-    }
-
-    private static TransformationActionConfiguration createNetworkfactAction() throws BuilderException {
-
-        TransformationActionConfigurationBuilder transformationBuilder =
-            new TransformationActionConfigurationBuilder(
-                "networkfact");
-
-        Feed NetworkConversionLog_Thrift_Feed1 =
-            new Feed("NetworkConversionLog_Thrift_Feed1");
-        Feed NetworkFraudLog_Thrift_Feed1 =
-            new Feed("NetworkFraudLog_Thrift_Feed2");
-
-        Feed networkfact_output_Feed = new Feed("networkfact_output_Feed");
-
-        TransformConfiguration coGroupTransformation_networkfactMapper =
-            new CoGroupTransformation("networkfactMapper");
-        TransformConfiguration projectionTransformation_NetworkFactReducer =
-            new ProjectionTransformation("NetworkFactReducer");
-
-        return transformationBuilder
-            .addInputFeeds(coGroupTransformation_networkfactMapper,
-                NetworkConversionLog_Thrift_Feed1,
-                NetworkFraudLog_Thrift_Feed1)
-            .addTransformation(projectionTransformation_NetworkFactReducer,
-                coGroupTransformation_networkfactMapper)
-            .addOutPutFeed(projectionTransformation_NetworkFactReducer,
-                networkfact_output_Feed).build();
-
-    }
-
-    private static TransformationActionConfiguration createSupplyFactAction() throws BuilderException {
-
-        TransformationActionConfigurationBuilder transformationBuilder =
-            new TransformationActionConfigurationBuilder(
-                "SupplyFact");
-
-        Feed SupplyImpressionLog_Thrift_Feed1 =
-            new Feed("SupplyImpressionLog_Thrift_Feed1");
-        Feed SupplyRequestLog_Thrift_Feed3 =
-            new Feed("SupplyRequestLog_Thrift_Feed3");
-
-        Feed networkfact_output_Feed = new Feed("networkfact_output_Feed");
-
-        TransformConfiguration coGroupTransformation_supplyfact_mapper =
-            new CoGroupTransformation("supplyfact_mapper");
-        TransformConfiguration projectionTransformation_SupplyFactReducer =
-            new ProjectionTransformation("SupplyFactReducer");
-
-        return transformationBuilder
-            .addInputFeeds(coGroupTransformation_supplyfact_mapper,
-                SupplyImpressionLog_Thrift_Feed1,
-                SupplyRequestLog_Thrift_Feed3)
-            .addTransformation(projectionTransformation_SupplyFactReducer,
-                coGroupTransformation_supplyfact_mapper)
-            .addOutPutFeed(projectionTransformation_SupplyFactReducer,
-                networkfact_output_Feed).build();
-
-    }
-
-    private static TransformationActionConfiguration createAdservesummaryAction() throws BuilderException {
-
-        TransformationActionConfigurationBuilder transformationBuilder =
-            new TransformationActionConfigurationBuilder(
-                "adservesummary");
-
-        Feed ImpressionRCLog_Thrift_Feed1 =
-            new Feed("ImpressionRCLog_Thrift_Feed1");
-        Feed RequestRCLog_Thrift_Feed3 =
-            new Feed("RequestRCLog_Thrift_Feed3");
-
-        Feed adservesummary_output_Feed =
-            new Feed("adservesummary_output_Feed");
-
-        TransformConfiguration coGroupTransformation_supplyfact_mapper =
-            new CoGroupTransformation("supplyfact_mapper");
-        TransformConfiguration projectionTransformation_SupplyFactReducer =
-            new ProjectionTransformation("SupplyFactReducer");
-
-        return transformationBuilder
-            .addInputFeeds(coGroupTransformation_supplyfact_mapper,
-                ImpressionRCLog_Thrift_Feed1,
-                RequestRCLog_Thrift_Feed3)
-            .addTransformation(projectionTransformation_SupplyFactReducer,
-                coGroupTransformation_supplyfact_mapper)
-            .addOutPutFeed(projectionTransformation_SupplyFactReducer,
-                adservesummary_output_Feed).build();
-
-    }
-
-    private static TransformationActionConfiguration createDemandfactAction() throws BuilderException {
-
-        TransformationActionConfigurationBuilder transformationBuilder =
-            new TransformationActionConfigurationBuilder(
-                "demandfact");
-
-        Feed NetworkOutput_Feed1 =
-            new Feed("NetworkOutput_Feed1");
-
-        Feed DemandOutput_output_Feed = new Feed("DemandOutput_output_Feed");
-
-        TransformConfiguration groupbyTransformation_supplyfact_mapper =
-            new GroupByTransformation("GROUPEDDATA");
-
-        TransformConfiguration projectionTransformation_AGGEREGATEDATA =
-            new ProjectionTransformation("AGGEREGATEDATA");
-
-        TransformConfiguration projectionTransformation_PROJECTEDDATA =
-            new ProjectionTransformation("PROJECTEDDATA");
-
-        return transformationBuilder
-            .addInputFeeds(groupbyTransformation_supplyfact_mapper,
-                NetworkOutput_Feed1)
-            .addTransformation(projectionTransformation_AGGEREGATEDATA,
-                groupbyTransformation_supplyfact_mapper)
-            .addTransformation(projectionTransformation_PROJECTEDDATA,
-                projectionTransformation_AGGEREGATEDATA)
-            .addOutPutFeed(projectionTransformation_PROJECTEDDATA,
-                DemandOutput_output_Feed).build();
 
     }
 
@@ -201,8 +80,8 @@ public class SimpleFlowExample {
 
         // build flow
 
-        fb.addAction(_1_email, "sucess", _2_tranformationAction)
-            .addAction(_1_email, "failure", _3_email);
+      //  fb.addAction(_1_email, "sucess", _2_tranformationAction)
+        //    .addAction(_1_email, "failure", _3_email);
         return fb.build();
     }
 

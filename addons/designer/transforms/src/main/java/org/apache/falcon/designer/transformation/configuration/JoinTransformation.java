@@ -18,23 +18,29 @@
 
 package org.apache.falcon.designer.transformation.configuration;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 
 /**
- * PlaceHolder to implementation for a join transformation. 
+ * PlaceHolder to implementation for a join transformation.
  *
  */
+@XmlRootElement(name = "joinByTransformation")
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class JoinTransformation extends
     TransformConfiguration<JoinTransformation> {
-    
+
     public JoinTransformation(String name) {
         super(name);
     }
-    
+
     @Override
     public Class<JoinTransformation> getConfigClass() {
-        
+
         return JoinTransformation.class;
     }
-    
+
 }

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.falcon.designer.primitive.action.builder;
+package org.apache.falcon.designer.action.primitive.builder;
 
 import javax.annotation.Nonnull;
 

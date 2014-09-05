@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.falcon.designer.primitive.action;
+package org.apache.falcon.designer.action.primitive;
 
 import org.apache.falcon.designer.action.configuration.EmailActionConfiguration;
 import org.apache.falcon.designer.core.primitive.Action;

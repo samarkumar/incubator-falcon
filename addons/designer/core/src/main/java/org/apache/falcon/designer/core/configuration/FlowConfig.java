@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * Flow data. More parameters would need to be added.
  */
-@XmlRootElement(name = "flow")
+@XmlRootElement(name = "flow" )
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class FlowConfig extends Configuration<FlowConfig> {
 
@@ -42,8 +42,8 @@ public class FlowConfig extends Configuration<FlowConfig> {
     private String name;
     private Integer version;
     private static final String CATEGORY = "FLOW";
-    private Set<ActionConfiguration> actionsNodes;
-    private Map<String, ActionConfiguration> cacheOfActions;
+    private Set<ActionConfiguration> actionsNodes = new HashSet<ActionConfiguration>();
+    private final Map<String, ActionConfiguration> cacheOfActions = new HashMap<String, ActionConfiguration>();
 
     public FlowConfig() {
     }
@@ -52,8 +52,6 @@ public class FlowConfig extends Configuration<FlowConfig> {
         this.namespace = namespace;
         this.entity = entity;
         this.name = name;
-        this.actionsNodes = new HashSet<ActionConfiguration>();
-        this.cacheOfActions = new HashMap<String, ActionConfiguration>();
     }
 
     @Override
@@ -88,18 +86,22 @@ public class FlowConfig extends Configuration<FlowConfig> {
     }
 
     @XmlElements({
-        @XmlElement(name="emailAction"),
-        @XmlElement(name="transformationAction"),
+        @XmlElement(name="EmailActionConfiguration" )
     })
     public Set<ActionConfiguration> getActionsNodes() {
         return actionsNodes;
     }
 
+    @XmlElements({
+        @XmlElement(name="EmailActionConfiguration"),
+    })
     public void setActionsNodes(Set<ActionConfiguration> actionsNodes) {
-        for(ActionConfiguration actionConfig: actionsNodes){
-            this.cacheOfActions.put(actionConfig.getName(), actionConfig);
+        if (actionsNodes != null) {
+            for (ActionConfiguration actionConfig : actionsNodes) {
+                this.cacheOfActions.put(actionConfig.getName(), actionConfig);
+            }
+            this.actionsNodes = actionsNodes;
         }
-        this.actionsNodes = actionsNodes;
     }
 
     public ActionConfiguration findAction(String actionName){
@@ -117,12 +119,12 @@ public class FlowConfig extends Configuration<FlowConfig> {
         this.name = name;
     }
 
-public Integer getVersion() {
-    return version;
-}
+    public Integer getVersion() {
+        return version;
+    }
 
-public void setVersion(Integer version) {
-    this.version = version;
-}
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
 }

@@ -18,22 +18,28 @@
 
 package org.apache.falcon.designer.transformation.configuration;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 
 /**
  * PlaceHolder to implementation for a filter transformation.
  */
+@XmlRootElement(name = "filterTransformation")
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class FilterTransformation extends
     TransformConfiguration<FilterTransformation> {
-    
+
     public FilterTransformation(String name) {
         super(name);
     }
-    
+
     @Override
     public Class<FilterTransformation> getConfigClass() {
-        
+
         return FilterTransformation.class;
     }
-    
+
 }

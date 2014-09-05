@@ -29,6 +29,10 @@ public abstract class ActionConfiguration<A extends ActionConfiguration> extends
 
     private Map<String, String> nextActionMap = new HashMap<String, String>();
 
+    public ActionConfiguration() {
+
+    }
+
     @Override
     public String getCategory() {
         return CATEGORY;

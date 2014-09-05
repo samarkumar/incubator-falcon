@@ -25,7 +25,7 @@ import org.apache.falcon.designer.core.configuration.ActionConfiguration;
 /**
  * Action object holding Email data.
  */
-@XmlRootElement(name = "emailAction")
+@XmlRootElement(name = "EmailActionConfiguration2")
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class EmailActionConfiguration extends ActionConfiguration<EmailActionConfiguration> {
 
@@ -34,6 +34,11 @@ public class EmailActionConfiguration extends ActionConfiguration<EmailActionCon
     private String subject;
     private String body;
     private String name;
+
+
+    public EmailActionConfiguration(){
+
+    }
 
     public EmailActionConfiguration(String name) {
         this.name = name;

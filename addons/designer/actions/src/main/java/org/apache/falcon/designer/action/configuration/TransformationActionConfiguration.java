@@ -24,6 +24,8 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.falcon.designer.core.configuration.ActionConfiguration;
@@ -33,7 +35,7 @@ import org.apache.falcon.designer.primitive.builder.BuilderException;
 /**
  * Action holding a DAG of transformation. It represents a pig action.
  */
-@XmlRootElement(name = "transformationAction")
+@XmlRootElement(name = "TransformationActionConfiguration")
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class TransformationActionConfiguration extends
     ActionConfiguration<TransformationActionConfiguration> {
@@ -48,6 +50,7 @@ public class TransformationActionConfiguration extends
     }
 
     @Override
+    @XmlElement(name = "name")
     public String getName() {
         return name;
     }
@@ -57,6 +60,13 @@ public class TransformationActionConfiguration extends
         return TransformationActionConfiguration.class;
     }
 
+    @XmlElements({
+        @XmlElement(name="coGroupTransformation"),
+        @XmlElement(name="filterTransformation"),
+        @XmlElement(name="groupByTransformation"),
+        @XmlElement(name="joinByTransformation"),
+        @XmlElement(name="projectionTransformationhai"),
+    })
     public Set<TransformConfiguration> getTranformationList() {
         return tranformationList;
     }
