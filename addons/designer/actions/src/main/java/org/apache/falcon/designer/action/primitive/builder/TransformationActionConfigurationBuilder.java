@@ -25,7 +25,9 @@ import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 import org.apache.falcon.designer.core.primitive.builder.BuilderException;
 
 /**
- * Builder to build TransformationActionConfiguration.
+ * Builder to build TransformationActionConfiguration by adding more
+ * transformations to existing DAG of transformation. Each addXX() method will
+ * add to the existing DAG of {@link TransformConfiguration}
  */
 public class TransformationActionConfigurationBuilder {
 

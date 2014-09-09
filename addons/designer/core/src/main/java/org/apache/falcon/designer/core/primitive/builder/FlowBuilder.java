@@ -27,7 +27,8 @@ import org.apache.falcon.designer.core.configuration.FlowConfig;
 import com.sun.istack.NotNull;
 
 /**
- * Create a flow.
+ * Builder class that would help in building a Flow by adding the successive
+ * action based on conditions.
  */
 public class FlowBuilder {
     private FlowConfig flowConfigInst = new FlowConfig();

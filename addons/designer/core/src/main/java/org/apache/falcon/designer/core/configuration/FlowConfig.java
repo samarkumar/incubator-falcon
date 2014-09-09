@@ -29,11 +29,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
-
 /**
- * Flow data. More parameters would need to be added.
+ * This is top level config object represents the designer flow. This would
+ * contain the entire dag of {@link ActionConfiguration}. This is the top level
+ * object which would be exchange from the client to server.Flow data. More
+ * parameters would need to be added.
  */
-@XmlRootElement(name = "flow" )
+@XmlRootElement(name = "flow")
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class FlowConfig extends Configuration<FlowConfig> {
 
@@ -42,8 +44,18 @@ public class FlowConfig extends Configuration<FlowConfig> {
     private String name;
     private Integer version;
     private static final String CATEGORY = "FLOW";
-    private Set<ActionConfiguration> actionsNodes = new HashSet<ActionConfiguration>();
-    private final Map<String, ActionConfiguration> cacheOfActions = new HashMap<String, ActionConfiguration>();
+    /**
+     * The set of ActionConfiguration which forms the nodes of the DAG represent
+     * by the FlowCOnfig object
+     */
+    private Set<ActionConfiguration> actionsNodes =
+        new HashSet<ActionConfiguration>();
+
+    /**
+     * cache of actionConfigName to ActionConfiguration objects.
+     */
+    private final Map<String, ActionConfiguration> cacheOfActions =
+        new HashMap<String, ActionConfiguration>();
 
     public FlowConfig() {
     }
@@ -86,14 +98,14 @@ public class FlowConfig extends Configuration<FlowConfig> {
     }
 
     @XmlElements({
-        @XmlElement(name="EmailActionConfiguration" )
+    @XmlElement(name = "EmailActionConfiguration")
     })
     public Set<ActionConfiguration> getActionsNodes() {
         return actionsNodes;
     }
 
     @XmlElements({
-        @XmlElement(name="EmailActionConfiguration"),
+    @XmlElement(name = "EmailActionConfiguration"),
     })
     public void setActionsNodes(Set<ActionConfiguration> actionsNodes) {
         if (actionsNodes != null) {
@@ -104,11 +116,11 @@ public class FlowConfig extends Configuration<FlowConfig> {
         }
     }
 
-    public ActionConfiguration findAction(String actionName){
+    public ActionConfiguration findAction(String actionName) {
         return this.cacheOfActions.get(actionName);
     }
 
-    public void addActions(ActionConfiguration actionsNode){
+    public void addActions(ActionConfiguration actionsNode) {
         this.cacheOfActions.put(actionsNode.getName(), actionsNode);
         this.actionsNodes.add(actionsNode);
 

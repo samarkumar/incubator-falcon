@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Abstract ActionConfiguration extending Configuration.
+ * Represents a Node in DAG represented by the {@link FlowConfig} object. This
+ * is abstract would be extended to EmailActionConfiguration, ShellActionConfiguration etc.
  */
 public abstract class ActionConfiguration<A extends ActionConfiguration> extends Configuration<A> {
 

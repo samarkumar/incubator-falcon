@@ -33,7 +33,8 @@ import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 import org.apache.falcon.designer.core.primitive.builder.BuilderException;
 
 /**
- * Action holding a DAG of transformation. It represents a pig action.
+ * Action holding a DAG of transformation. It is represents a pig action. The
+ * DAG of transformations would be converted to a pig script.
  */
 @XmlRootElement(name = "TransformationActionConfiguration")
 @XmlAccessorType(XmlAccessType.PROPERTY)

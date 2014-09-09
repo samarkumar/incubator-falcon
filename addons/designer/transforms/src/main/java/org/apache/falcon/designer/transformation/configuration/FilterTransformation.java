@@ -25,7 +25,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 
 /**
- * PlaceHolder to implementation for a filter transformation.
+ * PlaceHolder for implementation of a Filter transformation.
+ *
  */
 @XmlRootElement(name = "filterTransformation")
 @XmlAccessorType(XmlAccessType.PROPERTY)
