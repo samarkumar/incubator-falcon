@@ -29,8 +29,9 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
- * This is the configuration that primitives will use to configure their
- * instance.
+ * Configuration base class that would be required to construct respective
+ * primitives.Configurations object would be further serialized and exchanged
+ * from server to client.
  */
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public abstract class Configuration<T extends Configuration> {

@@ -25,8 +25,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 
 /**
- * PlaceHolder for implementation of a CoGroup transformation.
- *
+ * PlaceHolder for implementation of a CoGroup transformation. <b>Note:</b> The GROUP
+ * and COGROUP operators are identical. Both operators work with one or more
+ * relations. For readability GROUP is used in statements involving one relation
+ * and COGROUP is used in statements involving two or more relations.
  */
 @XmlRootElement(name = "coGroupTransformation")
 @XmlAccessorType(XmlAccessType.PROPERTY)

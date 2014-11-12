@@ -19,8 +19,9 @@ package org.apache.falcon.designer.core.configuration;
 
 
 /**
- * Represents a Node in DAG represented by the {@link FlowConfig} object. This
- * is abstract would be extended to EmailActionConfiguration, ShellActionConfiguration etc.
+ * Its a base class of all Action configutarion. This is abstract class and
+ * would be extended to EmailActionConfiguration, ShellActionConfiguration etc.
+ * Represents a Node in DAG represented by the {@link FlowConfig} object.
  */
 public abstract class ActionConfiguration<A extends ActionConfiguration> extends Configuration<A> {
 

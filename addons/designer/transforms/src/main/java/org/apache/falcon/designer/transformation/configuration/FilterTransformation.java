@@ -25,8 +25,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 
 /**
- * PlaceHolder for implementation of a Filter transformation.
- *
+ * PlaceHolder for implementation of a Filter transformation. It selects tuples
+ * from a relation based on some condition.
  */
 @XmlRootElement(name = "filterTransformation")
 @XmlAccessorType(XmlAccessType.PROPERTY)

@@ -21,8 +21,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Represents a abstract implementation of the a tranformation eg projection,
- * filter, group by .
+ * Represents a abstract implementation of an transformation. A transformation is
+ * the smallest unit of data flow.eg projection, filter, group by .
  */
 public abstract class TransformConfiguration<A extends TransformConfiguration> extends Configuration<A> {
 

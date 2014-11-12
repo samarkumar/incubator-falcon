@@ -25,7 +25,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 
 /**
- * PlaceHolder for implementation of a Projection transformation.
+ * PlaceHolder for implementation of a Projection transformation. Projection
+ * refers to that subset of the set of all columns found in a table, that you
+ * want returned.
  */
 @XmlRootElement(name = "projectionTransformation")
 @XmlAccessorType(XmlAccessType.PROPERTY)

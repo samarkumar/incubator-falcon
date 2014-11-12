@@ -23,10 +23,9 @@ import java.util.List;
 import org.apache.falcon.designer.core.configuration.FlowConfig;
 import org.apache.falcon.designer.core.service.FalconDesigner;
 import org.apache.falcon.designer.core.sysconfig.SystemConfiguration;
+
 /**
- *
- * The API implementations which.
- *
+ * The API implementations of the contact between the server and the clients.
  */
 public class FalconDesignerImpl implements FalconDesigner {
     private final SystemConfiguration sysConfigs;

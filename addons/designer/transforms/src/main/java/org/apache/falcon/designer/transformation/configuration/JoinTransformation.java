@@ -25,8 +25,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.falcon.designer.core.configuration.TransformConfiguration;
 
 /**
- * PlaceHolder for implementation of a Join transformation.
- *
+ * PlaceHolder for implementation of a Join transformation. Performs an join of
+ * two or more relations based on common field values.
  */
 @XmlRootElement(name = "joinByTransformation")
 @XmlAccessorType(XmlAccessType.PROPERTY)

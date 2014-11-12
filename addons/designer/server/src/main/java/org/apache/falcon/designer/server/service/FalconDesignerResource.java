@@ -35,7 +35,8 @@ import org.apache.falcon.designer.core.service.impl.FalconDesignerImpl;
 import org.apache.falcon.designer.core.sysconfig.SystemConfiguration;
 
 /**
- * Rest service implementation.
+ * Rest service implementation of the {@link FalconDesigner} contract.This class
+ * would expose the same api over rest.
  */
 @Path("flow")
 public class FalconDesignerResource implements FalconDesigner {

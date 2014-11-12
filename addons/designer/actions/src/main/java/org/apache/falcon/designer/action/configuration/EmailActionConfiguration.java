@@ -22,8 +22,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.falcon.designer.core.configuration.ActionConfiguration;
+
 /**
- * Action object holding Email data.
+ * Holds config data to construct a email Action. The email action allows
+ * sending emails in Oozie from a workflow application. An email action must
+ * provide to addresses, cc addresses (optional), a subject and a body .
+ * Multiple reciepents of an email can be provided as comma separated addresses.
  */
 @XmlRootElement(name = "EmailActionConfiguration")
 @XmlAccessorType(XmlAccessType.PROPERTY)
