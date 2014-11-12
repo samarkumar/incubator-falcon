@@ -26,8 +26,6 @@ public abstract class ActionConfiguration<A extends ActionConfiguration> extends
 
     private static final String CATEGORY = "ACTION";
 
-    //private Map<String, String> nextActionMap = new HashMap<String, String>();
-
     public ActionConfiguration() {
 
     }
@@ -36,18 +34,5 @@ public abstract class ActionConfiguration<A extends ActionConfiguration> extends
     public String getCategory() {
         return CATEGORY;
     }
-
-    /*public Map<String, String> getNextActionMap() {
-        return nextActionMap;
-    }
-
-    public void setNextActionMap(Map<String, String> nextActionMap) {
-        this.nextActionMap = nextActionMap;
-    }
-
-    public void addNextAction(String condition, String nextAction) {
-        this.nextActionMap.put(condition, nextAction);
-    }*/
-
 
 }
