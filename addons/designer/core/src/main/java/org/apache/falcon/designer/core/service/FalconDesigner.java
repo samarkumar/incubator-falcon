@@ -27,13 +27,13 @@ import org.apache.falcon.designer.core.configuration.FlowConfig;
 public interface FalconDesigner {
 
     /**
-     * Would it return all flows x all version or just latest flow;
+     * Would it return all flows x all version or just latest flow.
      * @return List of flowNames
      */
     List<String> getListOfFlowsNames();
 
     /**
-     * return List of versions supported for a given FlowName
+     * Return List of versions supported for a given FlowName.
      * @param flowName
      * @return List of versions supported for a given FlowName
      */
@@ -52,12 +52,12 @@ public interface FalconDesigner {
      * Will take care of creating/updating new existing version.
      * @param newFlow
      * @param overwrite
-     * @return FlowConfig with new updated versio
+     * @return FlowConfig with new updated version
      */
     FlowConfig createFlow(FlowConfig newFlow, Boolean overwrite);
 
     /**
-     * Compile a flow give flowName and a version
+     * Compile a flow give flowName and a version.
      * @param flowName
      * @param version
      * @return
@@ -65,7 +65,7 @@ public interface FalconDesigner {
     String compileFlow(String flowName, Integer version);
 
     /**
-     * Validate a flow give flowName and a version
+     * Validate a flow give flowName and a version.
      * @param flowName
      * @param version
      * @return
@@ -73,7 +73,7 @@ public interface FalconDesigner {
     String validateFlow(String flowName, Integer version);
 
     /**
-     * Build a flow give flowName and a version
+     * Build a flow give flowName and a version.
      * @param flowName
      * @param version
      * @return
@@ -81,7 +81,7 @@ public interface FalconDesigner {
     String buildFlow(String flowName, Integer version);
 
     /**
-     * Deploy a flow give flowName and a version
+     * Deploy a flow give flowName and a version.
      * @param flowName
      * @param version
      * @return
@@ -89,7 +89,7 @@ public interface FalconDesigner {
     String deployFlow(String flowName, Integer version);
 
     /**
-     * Delete a flow give flowName and a version
+     * Delete a flow give flowName and a version.
      * @param flowName
      * @param version
      * @return

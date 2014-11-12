@@ -17,8 +17,6 @@
  */
 package org.apache.falcon.designer.core.configuration;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Represents a Node in DAG represented by the {@link FlowConfig} object. This
@@ -28,7 +26,7 @@ public abstract class ActionConfiguration<A extends ActionConfiguration> extends
 
     private static final String CATEGORY = "ACTION";
 
-    private Map<String, String> nextActionMap = new HashMap<String, String>();
+    //private Map<String, String> nextActionMap = new HashMap<String, String>();
 
     public ActionConfiguration() {
 
@@ -39,7 +37,7 @@ public abstract class ActionConfiguration<A extends ActionConfiguration> extends
         return CATEGORY;
     }
 
-    public Map<String, String> getNextActionMap() {
+    /*public Map<String, String> getNextActionMap() {
         return nextActionMap;
     }
 
@@ -49,7 +47,7 @@ public abstract class ActionConfiguration<A extends ActionConfiguration> extends
 
     public void addNextAction(String condition, String nextAction) {
         this.nextActionMap.put(condition, nextAction);
-    }
+    }*/
 
 
 }

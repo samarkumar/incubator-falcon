@@ -25,7 +25,7 @@ import org.apache.falcon.designer.core.configuration.ActionConfiguration;
 /**
  * Action object holding Email data.
  */
-@XmlRootElement(name = "EmailActionConfiguration2")
+@XmlRootElement(name = "EmailActionConfiguration")
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class EmailActionConfiguration extends ActionConfiguration<EmailActionConfiguration> {
 

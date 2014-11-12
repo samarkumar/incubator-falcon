@@ -25,8 +25,6 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -46,16 +44,20 @@ public class FlowConfig extends Configuration<FlowConfig> {
     private static final String CATEGORY = "FLOW";
     /**
      * The set of ActionConfiguration which forms the nodes of the DAG represent
-     * by the FlowCOnfig object
+     * by the FlowCOnfig object.
      */
     private Set<ActionConfiguration> actionsNodes =
         new HashSet<ActionConfiguration>();
 
     /**
-     * cache of actionConfigName to ActionConfiguration objects.
+     * Cache of actionConfigName to ActionConfiguration objects.
+     * Mainly used for validation.
      */
-    private final Map<String, ActionConfiguration> cacheOfActions =
-        new HashMap<String, ActionConfiguration>();
+    //private final Map<String, ActionConfiguration> cacheOfActions =
+     //   new HashMap<String, ActionConfiguration>();
+
+    private Map<String, Map<String, String>> dagOfActions =
+        new HashMap<String, Map<String, String>>();
 
     public FlowConfig() {
     }
@@ -97,32 +99,34 @@ public class FlowConfig extends Configuration<FlowConfig> {
         return FlowConfig.class;
     }
 
-    @XmlElements({
-    @XmlElement(name = "EmailActionConfiguration")
-    })
     public Set<ActionConfiguration> getActionsNodes() {
         return actionsNodes;
     }
 
-    @XmlElements({
-    @XmlElement(name = "EmailActionConfiguration"),
-    })
     public void setActionsNodes(Set<ActionConfiguration> actionsNodes) {
-        if (actionsNodes != null) {
-            for (ActionConfiguration actionConfig : actionsNodes) {
-                this.cacheOfActions.put(actionConfig.getName(), actionConfig);
-            }
-            this.actionsNodes = actionsNodes;
-        }
-    }
-
-    public ActionConfiguration findAction(String actionName) {
-        return this.cacheOfActions.get(actionName);
+        this.actionsNodes = actionsNodes;
     }
 
     public void addActions(ActionConfiguration actionsNode) {
-        this.cacheOfActions.put(actionsNode.getName(), actionsNode);
         this.actionsNodes.add(actionsNode);
+
+    }
+
+    public void addToDag(String leftAction, String condition, String rightAction) {
+        Map<String, String> conditionMap = this.dagOfActions.get(leftAction);
+        if (conditionMap == null){
+            conditionMap = new HashMap<String, String>();
+            this.dagOfActions.put(leftAction, conditionMap);
+        }
+        conditionMap.put(condition, rightAction);
+    }
+
+    public String getNextAction(String leftAction, String condition) {
+        Map<String, String> conditionMap = this.dagOfActions.get(leftAction);
+        if (conditionMap == null){
+            return null;
+        }
+        return conditionMap.get(condition);
 
     }
 
@@ -137,6 +141,14 @@ public class FlowConfig extends Configuration<FlowConfig> {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public Map<String, Map<String, String>> getDagOfActions() {
+        return dagOfActions;
+    }
+
+    public void setDagOfActions(Map<String, Map<String, String>> dagOfActions) {
+        this.dagOfActions = dagOfActions;
     }
 
 }

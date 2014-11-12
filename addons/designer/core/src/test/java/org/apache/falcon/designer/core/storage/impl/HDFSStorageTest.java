@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.falcon.designer.core.storage.StorageException;
-import org.apache.falcon.designer.core.storage.impl.HDFSStorage;
 import org.apache.hadoop.conf.Configuration;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
