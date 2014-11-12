@@ -50,11 +50,10 @@ public class FlowConfig extends Configuration<FlowConfig> {
         new HashSet<ActionConfiguration>();
 
     /**
-     * Cache of actionConfigName to ActionConfiguration objects.
-     * Mainly used for validation.
+     * A map containg the DAG of action.It a two level map. The outter map
+     * contain the Map of action to condition->action. The inner action contains
+     * a Map of condition to action .
      */
-    //private final Map<String, ActionConfiguration> cacheOfActions =
-     //   new HashMap<String, ActionConfiguration>();
 
     private Map<String, Map<String, String>> dagOfActions =
         new HashMap<String, Map<String, String>>();
